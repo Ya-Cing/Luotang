@@ -14,7 +14,7 @@
             --text-main: #e0d0c0;
             --text-dark: #8a7b6b;
             --border-color: #5c3a3a;
-            --highlight: #d4af37; /* 古銅金 */
+            --highlight: #d4af37;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -90,7 +90,6 @@
             cursor: pointer;
             opacity: 0.8;
             filter: brightness(2) drop-shadow(0 0 5px rgba(255,255,255,0.5));
-            /* 預設使用一個齒輪與花瓣結合的 SVG 作為圖案 */
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e0d0c0"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-.97l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65c-.04-.24-.25-.42-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.63c-.04.31-.07.64-.07.97 0 .33.03.65.07.97l-2.11 1.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.25 1.17-.59 1.69-.99l2.49 1c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.63z"/></svg>') no-repeat center;
             background-size: contain;
             transition: transform 0.3s, filter 0.3s;
@@ -185,7 +184,7 @@
         .input-area input { flex: 1; border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.2); }
         .error-retry-btn { display: none; background: #d4af37; color: #000; font-weight: bold; }
 
-        /* 角色卡面板 (左右對照) */
+        /* 角色卡面板 */
         #cards-panel {
             display: none;
             position: absolute;
@@ -193,7 +192,7 @@
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             z-index: 20;
-            display: flex; /* Hidden by default via class or inline style */
+            display: flex; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
         .card-column {
@@ -238,16 +237,19 @@
     <!-- 維修密碼區 -->
     <div id="auth-screen" class="overlay-screen">
         <span class="close-btn" onclick="closeScreens()">×</span>
-        <h2 style="color:var(--primary-red); margin-bottom: 20px;">資料維護權限確認</h2>
-        <input type="password" id="admin-pwd" placeholder="輸入金鑰密碼" style="max-width: 300px; margin-bottom: 20px;">
-        <button class="btn-solid" onclick="verifyAdmin()">驗證</button>
+        <h2 id="auth-title" style="color:var(--primary-red); margin-bottom: 20px;">資料維護權限確認</h2>
+        <p id="auth-desc" style="margin-bottom: 15px; font-size: 14px; color: var(--text-dark); display: none;"></p>
+        <input type="password" id="admin-pwd" placeholder="輸入密碼" style="max-width: 300px; margin-bottom: 20px;">
+        <button id="auth-action-btn" class="btn-solid" onclick="verifyAdmin()">驗證</button>
         <p id="auth-msg" style="color: red; margin-top: 10px; font-size: 14px;"></p>
     </div>
 
     <!-- 維修資料庫 -->
     <div id="maintenance-screen" class="overlay-screen">
         <span class="close-btn" onclick="closeScreens()">×</span>
-        <h2 style="color:var(--highlight); margin-bottom: 20px;">後台資料維修區</h2>
+        <h2 style="color:var(--highlight); margin-bottom: 10px;">後台資料維修區</h2>
+        <button class="btn-solid" style="background:#555; font-size:12px; margin-bottom: 20px;" onclick="resetAdminPwd()">重新設定維修區密碼</button>
+        
         <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-dark);">可一次選取多個 txt 檔匯入，系統將自動整合為背景世界觀（洛棠、艾柏特等資料皆可）。</p>
         <input type="file" id="lore-files" multiple accept=".txt" style="margin-bottom: 20px; color: white;">
         <button class="btn-solid" onclick="uploadLore()">寫入記憶庫</button>
@@ -316,20 +318,21 @@
     let apiKey = "";
     let conversationHistory = [];
     let playerData = {};
-    let lastUserMessage = ""; // 用於 Retry
+    let lastUserMessage = "";
     
-    // 預設的密碼 Hash (此處設定為 'admin123' 的 SHA-256)
-    // 您可以更換這個 Hash，網路上有許多 SHA-256 產生器
-    const ADMIN_HASH_HEX = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
+    // === 密碼加密函式 (SHA-256) ===
+    async function hashPassword(pwd) {
+        const msgBuffer = new TextEncoder().encode(pwd);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
 
     // === 初始化與動畫 ===
     window.onload = () => {
-        // 開場動畫結束後顯示大廳
         setTimeout(() => {
             document.getElementById('intro-anim').style.display = 'none';
             document.getElementById('lobby-screen').style.display = 'flex';
-            
-            // 讀取暫存的 API Key
             const savedKey = localStorage.getItem('luotang_api_key');
             if (savedKey) {
                 document.getElementById('lobby-api-key').value = savedKey;
@@ -348,11 +351,65 @@
         apiKey = val;
     }
 
-    // === 維修區 (密碼與檔案處理) ===
+    // === 維修區 (自訂密碼機制) ===
     function openAuth() {
+        const savedHash = localStorage.getItem('luotang_admin_hash');
+        
+        // 如果設定為不須密碼 ("NONE")，直接進入
+        if (savedHash === "NONE") {
+            showMaintenanceScreen();
+            return;
+        }
+
         document.getElementById('auth-screen').style.display = 'flex';
         document.getElementById('admin-pwd').value = "";
         document.getElementById('auth-msg').innerText = "";
+        
+        if (!savedHash) {
+            // 第一次登入，要求設定密碼
+            document.getElementById('auth-title').innerText = "初次設定維修區密碼";
+            document.getElementById('auth-desc').innerText = "請輸入您想要的密碼。若不想設定密碼，請直接留白並點擊「儲存」。";
+            document.getElementById('auth-desc').style.display = 'block';
+            document.getElementById('auth-action-btn').innerText = "儲存並進入";
+            document.getElementById('auth-action-btn').onclick = setupAdminPwd;
+        } else {
+            // 已有密碼，進行驗證
+            document.getElementById('auth-title').innerText = "資料維護權限確認";
+            document.getElementById('auth-desc').style.display = 'none';
+            document.getElementById('auth-action-btn').innerText = "驗證";
+            document.getElementById('auth-action-btn').onclick = verifyAdmin;
+        }
+    }
+
+    async function setupAdminPwd() {
+        const pwd = document.getElementById('admin-pwd').value;
+        if (!pwd) {
+            localStorage.setItem('luotang_admin_hash', 'NONE');
+        } else {
+            const hash = await hashPassword(pwd);
+            localStorage.setItem('luotang_admin_hash', hash);
+        }
+        document.getElementById('auth-screen').style.display = 'none';
+        showMaintenanceScreen();
+    }
+
+    async function verifyAdmin() {
+        const pwd = document.getElementById('admin-pwd').value;
+        const savedHash = localStorage.getItem('luotang_admin_hash');
+        const hash = await hashPassword(pwd);
+
+        if (hash === savedHash) {
+            document.getElementById('auth-screen').style.display = 'none';
+            showMaintenanceScreen();
+        } else {
+            document.getElementById('auth-msg').innerText = "密碼錯誤，拒絕存取。";
+        }
+    }
+
+    function showMaintenanceScreen() {
+        document.getElementById('maintenance-screen').style.display = 'flex';
+        const currentLore = localStorage.getItem('custom_background_lore');
+        document.getElementById('lore-status').innerText = currentLore ? "【當前記憶庫已有資料】\n" + currentLore.substring(0, 100) + "..." : "目前記憶庫為空。";
     }
 
     function closeScreens() {
@@ -360,22 +417,11 @@
         document.getElementById('maintenance-screen').style.display = 'none';
     }
 
-    async function verifyAdmin() {
-        const pwd = document.getElementById('admin-pwd').value;
-        const msgBuffer = new TextEncoder().encode(pwd);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-        if (hashHex === ADMIN_HASH_HEX) {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('maintenance-screen').style.display = 'flex';
-            
-            // 顯示目前已載入的 Lore
-            const currentLore = localStorage.getItem('custom_background_lore');
-            document.getElementById('lore-status').innerText = currentLore ? "【當前記憶庫已有資料】\n" + currentLore.substring(0, 100) + "..." : "目前記憶庫為空。";
-        } else {
-            document.getElementById('auth-msg').innerText = "金鑰錯誤，拒絕存取。";
+    function resetAdminPwd() {
+        if(confirm("確定要重設維修區密碼嗎？清除後下次進入將要求重新設定。")) {
+            localStorage.removeItem('luotang_admin_hash');
+            alert("已清除密碼設定，請關閉維修區並重新點擊浮水印設定新密碼。");
+            closeScreens();
         }
     }
 
@@ -420,14 +466,12 @@
         document.getElementById('lobby-screen').style.display = 'none';
         document.getElementById('chat-screen').style.display = 'flex';
         
-        // 渲染歷史對話，但不發送新 Prompt
         const chatBox = document.getElementById('chat-history');
         chatBox.innerHTML = "";
         
-        // 跳過第一個 System Prompt (index 0) 不顯示給玩家看
         for(let i = 1; i < conversationHistory.length; i++) {
             const msg = conversationHistory[i];
-            let cleanText = msg.parts[0].text.replace(/\[PLAYER_UPDATE:.*?\]/g, ''); // 隱藏後台標記
+            let cleanText = msg.parts[0].text.replace(/\[PLAYER_UPDATE:.*?\]/g, ''); 
             appendMessage(msg.role === "model" ? "bot" : "user", cleanText, false);
         }
         
@@ -448,14 +492,13 @@
 請只輸出 JSON，不要有其他文字。`;
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] })
             });
             const data = await response.json();
             let resultText = data.candidates[0].content.parts[0].text;
             
-            // 清理可能出現的 markdown ```json
             resultText = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
             const parsed = JSON.parse(resultText);
             
@@ -483,7 +526,7 @@
                 appearance: document.getElementById('p-appearance').value || "尋常",
                 status: document.getElementById('p-status').value || "過客"
             },
-            dynamic_notes: [] // 儲存劇情推進導致的變化
+            dynamic_notes: []
         };
 
         const backgroundLore = localStorage.getItem('custom_background_lore') || "";
@@ -520,7 +563,6 @@ ${backgroundLore}
         document.getElementById('chat-screen').style.display = 'flex';
         updatePlayerCardUI();
 
-        // 開場白
         const openingScene = `進門的那一刻，你先聞到的是香。
 
 不是單一的花香，而是酒、脂粉、焚過的沉香混在一起，熱氣從燈火裡往上蒸，把夜色都熏得發甜。腳步一踏上青石台階，門簾被人掀開，笑聲、絲竹聲像水一樣往你身上撲。
@@ -553,7 +595,6 @@ ${backgroundLore}
 
     function retryMessage() {
         if(lastUserMessage) {
-            // 移除歷史記錄中的最後一筆(User 發送失敗的那筆)
             conversationHistory.pop(); 
             sendMessage(lastUserMessage, true);
         }
@@ -578,7 +619,7 @@ ${backgroundLore}
             inputField.disabled = true;
             inputField.placeholder = "洛棠正在看著你...";
 
-            const response = await fetch(`[https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$](https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$){apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: conversationHistory })
@@ -589,12 +630,11 @@ ${backgroundLore}
             const data = await response.json();
             let replyText = data.candidates[0].content.parts[0].text;
             
-            // 處理動態角色卡更新 [PLAYER_UPDATE: xxx]
             const updateMatch = replyText.match(/\[PLAYER_UPDATE:(.*?)\]/);
             if (updateMatch) {
                 playerData.dynamic_notes.push(updateMatch[1].trim());
                 updatePlayerCardUI();
-                replyText = replyText.replace(/\[PLAYER_UPDATE:.*?\]/g, '').trim(); // 移除標記不顯示給玩家
+                replyText = replyText.replace(/\[PLAYER_UPDATE:.*?\]/g, '').trim(); 
             }
 
             appendMessage("bot", replyText);
@@ -633,7 +673,6 @@ ${backgroundLore}
         
         if(playerData.dynamic_notes.length > 0) {
             html += `<div class="dynamic-update"><div class="trait-label" style="color:#ff6b81;">【後續羈絆與狀態變更】</div>`;
-            // 只顯示最後 3 條最新變更，以免版面過長
             const recentNotes = playerData.dynamic_notes.slice(-3);
             recentNotes.forEach(note => {
                 html += `<div style="font-size: 13px; margin-top:5px;">- ${note}</div>`;
