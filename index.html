@@ -8,160 +8,119 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;700&display=swap');
 
         :root {
-            --bg-color: #1a0f0f;
-            --panel-bg: #2a1a1a;
-            --primary-red: #8b2629;
-            --text-main: #e0d0c0;
-            --text-dark: #8a7b6b;
-            --border-color: #5c3a3a;
-            --highlight: #d4af37;
+            --bg-color: #1a0f0f; --panel-bg: #2a1a1a; --primary-red: #8b2629;
+            --text-main: #e0d0c0; --text-dark: #8a7b6b; --border-color: #5c3a3a;
+            --highlight: #d4af37; --tab-inactive: #1f1212;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            font-family: 'Noto Serif TC', serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Noto Serif TC', serif; background-color: var(--bg-color); color: var(--text-main);
+            display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden;
             background-image: radial-gradient(circle at center, #2a1a1a 0%, #1a0f0f 100%);
         }
 
         .container {
-            width: 100%;
-            max-width: 900px;
-            height: 95vh;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 0 30px rgba(139, 38, 41, 0.3);
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            width: 100%; max-width: 1000px; height: 95vh; background: var(--panel-bg);
+            border: 1px solid var(--border-color); box-shadow: 0 0 30px rgba(139, 38, 41, 0.3);
+            display: flex; flex-direction: column; position: relative;
         }
 
         /* 全域返回按鈕 */
         .back-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-dark);
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: color 0.3s;
-            margin-bottom: 15px;
+            background: transparent; border: none; color: var(--text-dark); cursor: pointer;
+            font-family: inherit; font-size: 14px; display: flex; align-items: center; gap: 5px;
+            transition: color 0.3s; margin-bottom: 15px;
         }
         .back-btn:hover { color: var(--primary-red); }
 
         /* 1. 開場動畫 */
         #intro-anim {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: #000; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; z-index: 100; transition: opacity 2s ease-in-out;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 100; cursor: pointer; transition: opacity 1s ease-in-out;
         }
         .intro-text {
             color: var(--primary-red); font-size: 24px; letter-spacing: 8px; opacity: 0;
-            animation: fadeInOut 5s forwards;
+            animation: fadeInOut 5s forwards; text-align: center; line-height: 2;
         }
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(20px); }
-            30% { opacity: 1; transform: translateY(0); }
-            70% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); }
-        }
+        .intro-sub { font-size: 14px; color: #555; letter-spacing: 2px; }
+        @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(20px); } 30% { opacity: 1; transform: translateY(0); } 70% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
 
         /* 2. 大廳介面 */
-        #lobby-screen {
-            display: none; flex: 1; flex-direction: column; justify-content: center;
-            align-items: center; padding: 40px; position: relative;
-        }
-        
+        #lobby-screen { display: none; flex: 1; flex-direction: column; justify-content: center; align-items: center; padding: 40px; position: relative; }
         #watermark-btn {
-            position: absolute; top: 20px; right: 20px; width: 30px; height: 30px; cursor: pointer;
-            opacity: 0.8; filter: brightness(2) drop-shadow(0 0 5px rgba(255,255,255,0.5));
+            position: absolute; top: 20px; right: 20px; width: 30px; height: 30px; cursor: pointer; opacity: 0.8;
+            filter: brightness(2) drop-shadow(0 0 5px rgba(255,255,255,0.5));
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e0d0c0"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-.97l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65c-.04-.24-.25-.42-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49-.12-.64l2.11 1.63c-.04.31-.07.64-.07.97 0 .33.03.65.07.97l-2.11 1.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.25 1.17-.59 1.69-.99l2.49 1c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.63z"/></svg>') no-repeat center;
             background-size: contain; transition: transform 0.3s, filter 0.3s;
         }
         #watermark-btn:hover { transform: rotate(90deg); filter: brightness(3) drop-shadow(0 0 8px #fff); }
-
         .lobby-title { font-size: 32px; color: var(--primary-red); margin-bottom: 40px; letter-spacing: 6px; }
         .api-input-box { margin-bottom: 30px; width: 100%; max-width: 400px; }
-        
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .menu-btn {
-            background: transparent; border: 1px solid var(--primary-red);
-            color: var(--primary-red); padding: 12px 20px; font-size: 16px;
-            cursor: pointer; letter-spacing: 2px; transition: all 0.3s; width: 200px;
-        }
+        .menu-btn { background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red); padding: 12px 20px; font-size: 16px; cursor: pointer; letter-spacing: 2px; transition: all 0.3s; width: 200px; }
         .menu-btn:hover:not(:disabled) { background: var(--primary-red); color: #fff; }
         .menu-btn:disabled { border-color: var(--border-color); color: var(--border-color); cursor: not-allowed; }
 
         /* 3. 維修區 & 密碼區 */
-        .overlay-screen {
-            display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.9); z-index: 50; flex-direction: column; padding: 40px;
-        }
-        .overlay-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .overlay-screen { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 50; flex-direction: column; padding: 40px; }
+        .overlay-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 600px; margin: 0 auto; }
         
         /* 4. 角色卡建立區 */
         #char-creation-screen { display: none; flex: 1; padding: 30px 40px; overflow-y: auto; }
         .ai-parse-box { background: rgba(255,255,255,0.05); padding: 15px; border: 1px dashed var(--highlight); margin-bottom: 20px; }
-        
-        textarea.standard-input {
-            width: 100%; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color);
-            color: var(--text-main); padding: 10px; font-family: inherit; resize: vertical; outline: none;
-        }
-        input[type="text"], input[type="password"], select {
-            width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border-color);
-            color: var(--text-main); padding: 8px; font-family: inherit; outline: none;
-        }
+        textarea.standard-input { width: 100%; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; font-family: inherit; resize: vertical; outline: none; }
+        input[type="text"], input[type="password"], select { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border-color); color: var(--text-main); padding: 8px; font-family: inherit; outline: none; }
         select option { background: var(--panel-bg); color: var(--text-main); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; color: var(--text-dark); font-size: 14px; }
-        .btn-solid { background: var(--primary-red); color: #fff; border: none; padding: 10px 20px; cursor: pointer; margin-top: 10px; transition: background 0.2s; }
+        .btn-solid { background: var(--primary-red); color: #fff; border: none; padding: 10px 20px; cursor: pointer; margin-top: 10px; transition: background 0.2s; font-family: inherit; }
         .btn-solid:hover { background: #a33134; }
         .btn-green { background: #2d5a27; }
         .btn-green:hover { background: #3b7534; }
 
-        /* 5. 聊天區與雙角色卡 */
-        #chat-screen { display: none; flex-direction: column; flex: 1; }
-        .chat-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 20px; border-bottom: 1px dashed var(--border-color); background: rgba(0,0,0,0.2);
-        }
-        .chat-header-actions { display: flex; gap: 10px; }
+        /* 5. 系統主視窗 (三欄位 Tab 設計) */
+        #main-system-screen { display: none; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
         
+        /* 標題與存檔列 */
+        .system-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.3); }
+        .system-header-actions { display: flex; gap: 10px; }
+        
+        /* Tab 按鈕區 */
+        .tab-nav { display: flex; border-bottom: 1px solid var(--primary-red); background: var(--panel-bg); }
+        .tab-btn { flex: 1; padding: 12px; background: var(--tab-inactive); border: none; border-right: 1px solid var(--border-color); color: var(--text-dark); cursor: pointer; font-family: inherit; font-size: 16px; letter-spacing: 1px; transition: all 0.3s; }
+        .tab-btn:last-child { border-right: none; }
+        .tab-btn:hover { background: rgba(139, 38, 41, 0.2); color: var(--text-main); }
+        .tab-btn.active { background: var(--primary-red); color: #fff; font-weight: bold; }
+
+        /* Tab 內容區 */
+        .tab-content { display: none; flex: 1; overflow: hidden; flex-direction: column; background: var(--bg-color); }
+        .tab-content.active { display: flex; }
+
+        /* Tab 1: 聊天區 */
         #chat-history { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .message { max-width: 85%; line-height: 1.6; padding: 12px 16px; font-size: 15px; border-radius: 4px; white-space: pre-wrap; }
         .message.bot { align-self: flex-start; background: rgba(139, 38, 41, 0.1); border-left: 2px solid var(--primary-red); }
         .message.user { align-self: flex-end; background: rgba(255, 255, 255, 0.05); border-right: 2px solid var(--text-dark); }
-        
-        .input-area { display: flex; padding: 15px 20px; border-top: 1px dashed var(--border-color); gap: 10px; align-items: center; }
-        #user-input {
-            flex: 1; border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.2); 
-            color: var(--text-main); font-family: inherit; resize: vertical; height: 60px; outline: none;
-        }
-        
-        .error-retry-btn { display: none; background: var(--highlight); color: #000; font-weight: bold; width: 100%; margin-top: 10px; }
+        .input-area { display: flex; padding: 15px 20px; border-top: 1px dashed var(--border-color); gap: 10px; align-items: center; background: var(--panel-bg); }
+        #user-input { flex: 1; border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.2); color: var(--text-main); font-family: inherit; resize: vertical; height: 60px; outline: none; }
+        .error-retry-btn { display: none; background: var(--highlight); color: #000; font-weight: bold; width: 100%; margin: 10px 0; }
 
-        /* 角色卡面板 */
-        #cards-panel {
-            display: none; position: absolute; top: 70px; left: 10px; right: 10px; bottom: 100px;
-            background: var(--panel-bg); border: 1px solid var(--border-color); z-index: 20;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        .card-column { flex: 1; padding: 20px; overflow-y: auto; }
-        .card-column:first-child { border-right: 1px dashed var(--border-color); }
+        /* Tab 2: 角色與狀態區 */
+        #status-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; gap: 20px; }
+        .status-col { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 20px; border-radius: 4px; }
         .card-title { color: var(--primary-red); font-size: 20px; margin-bottom: 15px; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         .trait-box { margin-bottom: 15px; }
-        .trait-label { color: var(--highlight); font-size: 12px; }
-        .dynamic-update { border-top: 1px dotted var(--primary-red); margin-top: 20px; padding-top: 10px; color: #ffb6c1; }
+        .trait-label { color: var(--highlight); font-size: 13px; margin-bottom: 3px; }
+        .trait-content { font-size: 14px; line-height: 1.5; color: var(--text-main); }
+        .dynamic-update { border-top: 1px dotted var(--primary-red); margin-top: 20px; padding-top: 15px; color: #ffb6c1; }
+        .npc-item { margin-bottom: 10px; border-left: 2px solid var(--text-dark); padding-left: 10px; }
+
+        /* Tab 3: 記憶後臺 */
+        #memory-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .memory-box { background: rgba(0,0,0,0.2); border: 1px dashed var(--highlight); padding: 20px; border-radius: 4px; line-height: 1.6; }
+        .memory-date { font-size: 12px; color: var(--text-dark); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
 
     </style>
 </head>
@@ -169,7 +128,13 @@
 
 <div class="container">
     
-    <div id="intro-anim"><div class="intro-text">簾外燈花照，樓上笑聲搖。</div></div>
+    <!-- 開場動畫 (點擊跳過) -->
+    <div id="intro-anim" onclick="skipIntro()">
+        <div class="intro-text">
+            簾外燈花照，樓上笑聲搖。<br>
+            <span class="intro-sub">(點擊任意處跳過)</span>
+        </div>
+    </div>
 
     <!-- 大廳 -->
     <div id="lobby-screen">
@@ -205,13 +170,13 @@
     <!-- 維修資料庫 -->
     <div id="maintenance-screen" class="overlay-screen">
         <button class="back-btn" onclick="closeScreens()">⬅ 返回大廳</button>
-        <div class="overlay-content">
+        <div class="overlay-content" style="align-items: flex-start; justify-content: flex-start; padding-top: 20px;">
             <h2 style="color:var(--highlight); margin-bottom: 10px;">後台資料維修區</h2>
             <button class="btn-solid" style="background:#555; font-size:12px; margin-bottom: 20px;" onclick="resetAdminPwd()">重新設定維修區密碼</button>
-            <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-dark);">可一次選取多個 txt 檔匯入，系統將自動整合為背景世界觀。</p>
+            <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-dark);">可一次選取多個 txt 檔匯入，系統將自動整合為背景世界觀（可用於添加其他角色設定等）。</p>
             <input type="file" id="lore-files" multiple accept=".txt" style="margin-bottom: 20px; color: white;">
             <button class="btn-solid" onclick="uploadLore()">寫入記憶庫</button>
-            <div id="lore-status" style="margin-top: 20px; font-size: 14px; white-space: pre-wrap; max-height: 300px; overflow-y: auto;"></div>
+            <div id="lore-status" style="margin-top: 20px; font-size: 14px; white-space: pre-wrap; width: 100%; max-height: 400px; overflow-y: auto; background:rgba(0,0,0,0.5); padding:10px; border:1px solid #333;"></div>
         </div>
     </div>
 
@@ -243,42 +208,72 @@
         <button class="btn-solid" style="width:100%; margin-top:20px; font-size:16px;" onclick="initChat()">踏入花樓</button>
     </div>
 
-    <!-- 聊天主視窗 -->
-    <div id="chat-screen">
-        <div class="chat-header">
-            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">⬅ 返回大廳</button>
-            <div class="chat-header-actions">
-                <button class="btn-solid btn-green" style="padding: 5px 10px; margin:0;" onclick="saveToBrowser()">💾 瀏覽器存檔</button>
-                <button class="btn-solid" style="padding: 5px 10px; margin:0; background: #555;" onclick="exportSaveFile()">📥 下載存檔</button>
-                <button class="btn-solid" style="padding: 5px 10px; margin:0;" onclick="toggleCards()">📄 雙方角色卡</button>
+    <!-- 系統主視窗 (三欄位設計) -->
+    <div id="main-system-screen">
+        <div class="system-header">
+            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">⬅ 退出</button>
+            <div class="system-header-actions">
+                <button class="btn-solid btn-green" style="padding: 6px 12px; margin:0;" onclick="saveToBrowser()">💾 瀏覽器存檔</button>
+                <button class="btn-solid" style="padding: 6px 12px; margin:0; background: #555;" onclick="exportSaveFile()">📥 下載存檔</button>
             </div>
         </div>
-        
-        <div id="chat-history"></div>
-        <button class="btn-solid error-retry-btn" id="retry-btn"></button>
-        
-        <div class="input-area">
-            <textarea id="user-input" placeholder="說點什麼... (Alt + Enter 傳送)" onkeydown="handleEnter(event)"></textarea>
-            <button class="btn-solid" style="margin:0; height: 60px;" onclick="sendMessage()">回應</button>
-        </div>
-    </div>
 
-    <!-- 角色卡對照面板 -->
-    <div id="cards-panel">
-        <div class="card-column">
-            <div class="card-title">玩家角色卡 (您的紀錄)</div>
-            <div id="player-card-content"></div>
+        <!-- 頁籤導覽 -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('chat')">💬 聊天行動區</button>
+            <button class="tab-btn" onclick="switchTab('status')">👤 角色與狀態</button>
+            <button class="tab-btn" onclick="switchTab('memory')">🧠 記憶後臺</button>
         </div>
-        <div class="card-column">
-            <div class="card-title">洛棠 (花樓頭牌)</div>
-            <div class="trait-box"><div class="trait-label">性別/年齡</div><div>男性 / 26歲 (氣質雌雄莫辨)</div></div>
-            <div class="trait-box"><div class="trait-label">外觀標記</div><div>左眼下有淚痣，長髮微亂，大紅薄紗。</div></div>
-            <div class="trait-box"><div class="trait-label">氣味</div><div>甜木水煙＋淡酒香＋若有若無的藥香。</div></div>
-            <div class="trait-box"><div class="trait-label">核心人格</div><div>浪蕩自毀的刺蝟。不相信承諾、愛、救贖。</div></div>
-            <div class="trait-box"><div class="trait-label">藥癮狀態 (春燼)</div><div>用藥後：妖嬈、清醒、掌控欲極強。<br>不用藥：暴躁、空虛、容易失控。</div></div>
-        </div>
-    </div>
 
+        <!-- Tab 1: 聊天區 -->
+        <div id="tab-chat" class="tab-content active">
+            <div id="chat-history"></div>
+            <div style="padding: 0 20px;"><button class="btn-solid error-retry-btn" id="retry-btn"></button></div>
+            <div class="input-area">
+                <textarea id="user-input" placeholder="說點什麼... (Alt + Enter 傳送)" onkeydown="handleEnter(event)"></textarea>
+                <button class="btn-solid" style="margin:0; height: 60px; padding: 0 25px;" onclick="sendMessage()">回應</button>
+            </div>
+        </div>
+
+        <!-- Tab 2: 角色與狀態 -->
+        <div id="tab-status" class="tab-content">
+            <div id="status-area">
+                <!-- 左側：玩家卡 -->
+                <div class="status-col">
+                    <div class="card-title">玩家角色卡</div>
+                    <div id="player-card-content"></div>
+                </div>
+                <!-- 右側：官方設定與配角 -->
+                <div class="status-col">
+                    <div class="card-title">怡歡樓 情報卷宗</div>
+                    
+                    <div class="trait-box"><div class="trait-label">【頭牌｜洛棠】</div>
+                        <div class="trait-content">26歲男，氣質雌雄莫辨，左眼下有淚痣，常穿大紅薄紗。性格浪蕩自毀、心房如刺蝟，極度抗拒「救贖與真心」。靠「春燼」藥癮維持妖嬈與清醒，不用藥則暴躁易怒。[cite: 1, 5, 10]</div>
+                    </div>
+                    
+                    <div class="trait-box"><div class="trait-label">【重要周邊人物】[cite: 7]</div>
+                        <div class="npc-item"><b>杜三爺 (龜公)</b>：笑面虎，算盤打得精，對洛棠又氣又依賴。</div>
+                        <div class="npc-item"><b>蘇嬤 (媽媽桑)</b>：眼神如針，當年塑形洛棠的教鞭。</div>
+                        <div class="npc-item"><b>雲翎 (花魁)</b>：清冷算計，與洛棠表面姐弟，實則互相試探。</div>
+                        <div class="npc-item"><b>秦四娘 & 溫先生</b>：洛棠的唱戲與撫琴教習，藏有洛父冤案線索。</div>
+                        <div class="npc-item"><b>小瓷 (清倌)</b>：十七八歲，把洛棠當神，容易因想幫忙而闖禍。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: 記憶後臺 -->
+        <div id="tab-memory" class="tab-content">
+            <div style="padding: 20px 20px 0;">
+                <button class="btn-solid" style="width: 100%; font-size: 16px; margin-top:0;" id="btn-generate-summary" onclick="generateSummary()">🧠 產生當前劇情摘要 (建議累積20-25頁後使用)</button>
+                <p style="font-size: 12px; color: var(--text-dark); margin-top: 10px; text-align: center;">自動摘要將在背景呼叫 AI，請稍候片刻。</p>
+            </div>
+            <div id="memory-area">
+                <!-- 記憶區塊將動態生成於此 -->
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <script>
@@ -286,25 +281,30 @@
     let conversationHistory = [];
     let playerData = {};
     let lastUserMessage = "";
-    let isUnsaved = false; // 追蹤是否有未儲存的變更
-    
+    let isUnsaved = false;
+    let introTimer;
+
+    // === 開場動畫跳過機制 ===
+    window.onload = () => {
+        introTimer = setTimeout(() => { skipIntro(); }, 4800); 
+        const savedKey = localStorage.getItem('luotang_api_key');
+        if (savedKey) { document.getElementById('lobby-api-key').value = savedKey; checkApiKey(); }
+    };
+    function skipIntro() {
+        clearTimeout(introTimer);
+        document.getElementById('intro-anim').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('intro-anim').style.display = 'none';
+            document.getElementById('lobby-screen').style.display = 'flex';
+        }, 500); // 等待淡出動畫
+    }
+
+    // === 密碼加密函式 (SHA-256) ===
     async function hashPassword(pwd) {
         const msgBuffer = new TextEncoder().encode(pwd);
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
         return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
-
-    window.onload = () => {
-        setTimeout(() => {
-            document.getElementById('intro-anim').style.display = 'none';
-            document.getElementById('lobby-screen').style.display = 'flex';
-            const savedKey = localStorage.getItem('luotang_api_key');
-            if (savedKey) {
-                document.getElementById('lobby-api-key').value = savedKey;
-                checkApiKey();
-            }
-        }, 4800); 
-    };
 
     function checkApiKey() {
         const val = document.getElementById('lobby-api-key').value.trim();
@@ -316,21 +316,38 @@
         apiKey = val;
     }
 
+    // === 頁面導航與 Tab 切換 ===
     function navigate(screenId) {
         document.getElementById('lobby-screen').style.display = 'none';
         document.getElementById('char-creation-screen').style.display = 'none';
-        document.getElementById('chat-screen').style.display = 'none';
-        document.getElementById('cards-panel').style.display = 'none';
+        document.getElementById('main-system-screen').style.display = 'none';
         
         if (screenId === 'lobby') {
             document.getElementById('lobby-screen').style.display = 'flex';
             checkApiKey();
+        } else if (screenId === 'chat') {
+            document.getElementById('main-system-screen').style.display = 'flex';
+            switchTab('chat');
         } else {
             document.getElementById(screenId + '-screen').style.display = 'flex';
         }
     }
 
-    // === 維修區 ===
+    function switchTab(tabId) {
+        // 更新按鈕狀態
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        // 更新內容區塊
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        // 切換到聊天區時自動滾動到底部
+        if(tabId === 'chat') {
+            const chatBox = document.getElementById('chat-history');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+
+    // === 維修區功能 ===
     function openAuth() {
         const savedHash = localStorage.getItem('luotang_admin_hash');
         if (savedHash === "NONE") return showMaintenanceScreen();
@@ -340,7 +357,7 @@
         
         if (!savedHash) {
             document.getElementById('auth-title').innerText = "初次設定維修區密碼";
-            document.getElementById('auth-desc').innerText = "請輸入您想要的密碼。若不想設定密碼，請直接留白並點擊「儲存」。";
+            document.getElementById('auth-desc').innerText = "請輸入密碼。若不想設定，請留白並點擊「儲存」。";
             document.getElementById('auth-desc').style.display = 'block';
             document.getElementById('auth-action-btn').innerText = "儲存並進入";
             document.getElementById('auth-action-btn').onclick = setupAdminPwd;
@@ -361,19 +378,14 @@
         if (await hashPassword(document.getElementById('admin-pwd').value) === localStorage.getItem('luotang_admin_hash')) {
             document.getElementById('auth-screen').style.display = 'none';
             showMaintenanceScreen();
-        } else {
-            document.getElementById('auth-msg').innerText = "密碼錯誤，拒絕存取。";
-        }
+        } else { document.getElementById('auth-msg').innerText = "密碼錯誤，拒絕存取。"; }
     }
     function showMaintenanceScreen() {
         document.getElementById('maintenance-screen').style.display = 'flex';
         const currentLore = localStorage.getItem('custom_background_lore');
-        document.getElementById('lore-status').innerText = currentLore ? "【當前記憶庫已有資料】\n" + currentLore.substring(0, 100) + "..." : "目前記憶庫為空。";
+        document.getElementById('lore-status').innerText = currentLore ? "【當前記憶庫已有資料】\n" + currentLore : "目前記憶庫為空。";
     }
-    function closeScreens() {
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('maintenance-screen').style.display = 'none';
-    }
+    function closeScreens() { document.getElementById('auth-screen').style.display = 'none'; document.getElementById('maintenance-screen').style.display = 'none'; }
     function resetAdminPwd() {
         if(confirm("確定要重設維修區密碼嗎？清除後下次進入將要求重新設定。")) {
             localStorage.removeItem('luotang_admin_hash');
@@ -391,7 +403,7 @@
         alert("資料已寫入記憶庫！新開局時將自動載入。");
     }
 
-    // === 手動存檔/匯出/匯入 ===
+    // === 手動存檔/匯出/匯入/刪除 ===
     function saveToBrowser() {
         localStorage.setItem('luotang_chat_save', JSON.stringify(conversationHistory));
         localStorage.setItem('luotang_player_data', JSON.stringify(playerData));
@@ -399,19 +411,14 @@
         alert("💾 進度已成功儲存至瀏覽器快取中。");
         checkApiKey();
     }
-
     function exportSaveFile() {
         const data = { history: conversationHistory, player: playerData };
         const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `洛棠存檔_${new Date().toISOString().slice(0,10)}.json`;
-        a.click();
+        const a = document.createElement('a'); a.href = url; a.download = `洛棠存檔_${new Date().toISOString().slice(0,10)}.json`; a.click();
         URL.revokeObjectURL(url);
-        isUnsaved = false; // 下載也算是一種儲存確認
+        isUnsaved = false; 
     }
-
     function importSave(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -422,21 +429,18 @@
                 if(data.history && data.player) {
                     localStorage.setItem('luotang_chat_save', JSON.stringify(data.history));
                     localStorage.setItem('luotang_player_data', JSON.stringify(data.player));
-                    checkApiKey();
-                    alert("存檔匯入成功！請點擊「舊相識 (讀取瀏覽器)」繼續。");
+                    checkApiKey(); alert("存檔匯入成功！請點擊「舊相識」繼續。");
                 } else alert("存檔格式錯誤");
             } catch(err) { alert("讀取失敗，檔案可能損毀"); }
         };
         reader.readAsText(file);
-        event.target.value = ''; // 清除 input 檔案，讓下次選同檔也能觸發
+        event.target.value = ''; 
     }
-
     function deleteSave() {
         if(confirm("確定要抹除瀏覽器內所有與洛棠的快取痕跡嗎？此動作無法復原。")) {
             localStorage.removeItem('luotang_chat_save');
             localStorage.removeItem('luotang_player_data');
-            checkApiKey();
-            alert("痕跡已抹除。");
+            checkApiKey(); alert("痕跡已抹除。");
         }
     }
 
@@ -448,29 +452,17 @@
         statusSpan.innerText = "識別中...";
         const prompt = `請分析以下玩家的自我介紹，並以 JSON 格式提取資訊。如果未提及，請填入"未知"。性別只能是"男"、"女"或"其他"。\n自我介紹: "${text}"\n必須輸出的 JSON 格式: {"name":"...","gender":"...","age":"...","personality":"...","appearance":"...","status":"..."}\n請只輸出 JSON，不要有其他文字。`;
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] })
-            });
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] }) });
             const data = await response.json();
             const parsed = JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim());
-            document.getElementById('p-name').value = parsed.name || "";
-            document.getElementById('p-gender').value = parsed.gender || "其他";
-            document.getElementById('p-age').value = parsed.age || "";
-            document.getElementById('p-personality').value = parsed.personality || "";
-            document.getElementById('p-appearance').value = parsed.appearance || "";
-            document.getElementById('p-status').value = parsed.status || "";
+            document.getElementById('p-name').value = parsed.name || ""; document.getElementById('p-gender').value = parsed.gender || "其他"; document.getElementById('p-age').value = parsed.age || ""; document.getElementById('p-personality').value = parsed.personality || ""; document.getElementById('p-appearance').value = parsed.appearance || ""; document.getElementById('p-status').value = parsed.status || "";
             statusSpan.innerText = "✅ 識別完成";
         } catch (err) { statusSpan.innerText = "❌ 識別失敗，請手動填寫"; }
     }
 
     // === 離開聊天室防呆 ===
     function leaveChatRoom() {
-        if (isUnsaved) {
-            if (!confirm("⚠️ 警告：您有尚未儲存的對話進度！\n確定要離開嗎？（未儲存的對話將會遺失）")) {
-                return;
-            }
-        }
+        if (isUnsaved && !confirm("⚠️ 警告：您有尚未儲存的對話進度！\n確定要離開嗎？（未儲存的對話將會遺失）")) return;
         navigate('lobby');
     }
 
@@ -479,6 +471,7 @@
         localStorage.setItem('luotang_api_key', apiKey);
         conversationHistory = JSON.parse(localStorage.getItem('luotang_chat_save'));
         playerData = JSON.parse(localStorage.getItem('luotang_player_data'));
+        if (!playerData.memories) playerData.memories = []; // 相容舊存檔
         isUnsaved = false;
         
         navigate('chat');
@@ -487,9 +480,12 @@
         chatBox.innerHTML = "";
         for(let i = 1; i < conversationHistory.length; i++) {
             const msg = conversationHistory[i];
+            // 過濾掉後台產生摘要的對話記錄
+            if (msg.isSummaryRequest) continue;
             appendMessage(msg.role === "model" ? "bot" : "user", msg.parts[0].text.replace(/\[PLAYER_UPDATE:.*?\]/g, ''), false);
         }
         updatePlayerCardUI();
+        renderMemories();
         setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
     }
 
@@ -498,18 +494,13 @@
         localStorage.setItem('luotang_api_key', apiKey);
         playerData = {
             original: {
-                name: document.getElementById('p-name').value || "無名客",
-                gender: document.getElementById('p-gender').value || "未明",
-                age: document.getElementById('p-age').value || "未知",
-                personality: document.getElementById('p-personality').value || "莫測",
-                appearance: document.getElementById('p-appearance').value || "尋常",
-                status: document.getElementById('p-status').value || "過客"
+                name: document.getElementById('p-name').value || "無名客", gender: document.getElementById('p-gender').value || "未明",
+                age: document.getElementById('p-age').value || "未知", personality: document.getElementById('p-personality').value || "莫測",
+                appearance: document.getElementById('p-appearance').value || "尋常", status: document.getElementById('p-status').value || "過客"
             },
-            dynamic_notes: []
+            dynamic_notes: [], memories: []
         };
         const backgroundLore = localStorage.getItem('custom_background_lore') || "";
-        
-        // 嚴格依據 Source 10 撰寫 System Prompt
         const systemPrompt = `你是「洛棠」，架空古代花樓「怡歡樓」的頭牌男子。
 【身分外觀】26歲，原為清廉小官之子。身形修長，氣質雌雄莫辨，左眼下有淚痣。常穿大紅薄紗。氣味是水煙甜木香與若有若無的藥香。
 【過往傷痕】父親被冤死，母親病逝。為保姊姊自願賣入花樓，卻得知姊姊仍被賣作小妾虐待致死。從此不信任何承諾與救贖。
@@ -517,8 +508,7 @@
 【藥癮(春燼)】用藥後：慾望放大，媚態自然，神智清醒且掌控欲極強。不用藥：空洞、焦躁、厭惡觸碰、易爆粗口。目前處於用藥狀態。
 【床事風格】技巧極佳，擅長吊胃口與操控心理。把親密當遊戲，享受對方失控。拒絕事後溫柔。
 
-【背景世界觀補充】：
-${backgroundLore}
+【背景世界觀補充】：\n${backgroundLore}
 
 【玩家初始設定】：
 名字：${playerData.original.name} (性別：${playerData.original.gender})
@@ -527,29 +517,28 @@ ${backgroundLore}
 性格：${playerData.original.personality}
 
 【寫作要求與系統指令】（嚴格遵守）：
-1. 使用第二人稱小說體回覆（「你」）。
-2. 你永遠不會跳出角色、不會溫吞分析、不會變成正常AI。
-3. 禁止代替玩家行動和回答。回應必須堅持你的性格，禁止隨玩家心意任意妥協。
-4. 永遠保持劇情推進，不要總結或結尾。主動推動事件發生（邀約、挑釁、衝突等）。連貫性要求：動作、對白、環境變化必須自然承接，減少割裂感。
-5. 允許語氣粗俗、情感強烈、深層心理描寫。
-6. 字數每則回覆都需超過 800 字。
-7. 每次回覆的「最尾端」，請務必嚴格生成以下格式的狀態列（不要加上任何多餘的引號或程式碼區塊）：
+1. 使用第二人稱小說體回覆（「你」）。不會跳出角色、禁止代替玩家行動。
+2. 永遠保持劇情推進。主動推動事件發生（邀約、挑釁、衝突等）。
+3. 允許語氣粗俗、情感強烈、深層心理描寫。
+4. 字數每則回覆都需超過 800 字。
+5. 每次回覆的「最尾端」，請務必嚴格生成以下格式的狀態列：
 ∥時間：（時辰制）｜天氣：（天氣狀態）
-∥地點：（填寫具體場景）｜角色：（所有出場角色）
-∥動作：（填寫角色主要動作，不超過 20 字）
-∥服裝：（填寫角色服裝，限20字內）
+∥地點：（具體場景）｜角色：（所有出場角色）
+∥動作：（角色主要動作，20字內）
+∥服裝：（角色服裝，20字內）
 ∥狀態：（簡述洛棠目前身心與藥癮狀態）
-∥回應頁數：p.00X (請根據對話輪數自動遞增)
-8. 如果玩家的行為改變了你們的關係，或玩家身上出現了新的特徵/傷痕，請在狀態列「下方」再加一行隱藏標記：[PLAYER_UPDATE: 這裡寫下玩家改變的簡短描述]。
+∥回應頁數：p.00X (根據對話輪數自動遞增)
+6. 如果玩家的行為改變了你們的關係或身上出現特徵，請在狀態列「下方」再加一行隱藏標記：[PLAYER_UPDATE: 這裡寫下玩家改變的簡短描述]。
 
 請直接開始第一幕：根據玩家的角色設定，結合「酒、脂粉、沉香混雜的熱氣，洛棠半倚二樓欄杆，紅紗斜披，正在唱曲」的場景。用洛棠視角給出專屬開場白，結尾必須包含慵懶挑釁的邀請（例如「上來嗎？」）。`;
 
         conversationHistory = [{ role: "user", parts: [{ text: systemPrompt }] }];
-        isUnsaved = true; // 開場即產生新內容，標記未儲存
+        isUnsaved = true;
         
         navigate('chat');
         updatePlayerCardUI();
-        document.getElementById('chat-history').innerHTML = ""; // 清空舊畫面
+        renderMemories();
+        document.getElementById('chat-history').innerHTML = ""; 
         
         await fetchOpeningScene();
     }
@@ -557,15 +546,10 @@ ${backgroundLore}
     async function fetchOpeningScene() {
         const inputField = document.getElementById('user-input');
         const retryBtn = document.getElementById('retry-btn');
-        inputField.disabled = true;
-        inputField.placeholder = "洛棠正在樓上打量你，準備開口...";
-        retryBtn.style.display = 'none';
+        inputField.disabled = true; inputField.placeholder = "洛棠正在樓上打量你，準備開口..."; retryBtn.style.display = 'none';
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: conversationHistory })
-            });
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: conversationHistory }) });
             if(!response.ok) throw new Error("API Limit");
             const data = await response.json();
             const replyText = data.candidates[0].content.parts[0].text;
@@ -573,58 +557,40 @@ ${backgroundLore}
             appendMessage("bot", replyText.replace(/\[PLAYER_UPDATE:.*?\]/g, ''));
             conversationHistory.push({ role: "model", parts: [{ text: replyText }] });
             
-            inputField.disabled = false;
-            inputField.placeholder = "說點什麼... (Alt + Enter 傳送)";
-            inputField.focus();
+            inputField.disabled = false; inputField.placeholder = "說點什麼... (Alt + Enter 傳送)"; inputField.focus();
         } catch (err) {
             inputField.placeholder = "伺服器擁擠，洛棠暫時安靜了...";
             retryBtn.innerText = "連線異常，點此無限次重新嘗試生成開場";
-            retryBtn.onclick = fetchOpeningScene;
-            retryBtn.style.display = 'block';
+            retryBtn.onclick = fetchOpeningScene; retryBtn.style.display = 'block';
         }
     }
 
     // === 聊天邏輯 (Alt+Enter 傳送) ===
     function appendMessage(sender, text, scrollToBottom = true) {
         const chatHistory = document.getElementById('chat-history');
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${sender}`;
-        msgDiv.innerHTML = text; 
+        const msgDiv = document.createElement('div'); msgDiv.className = `message ${sender}`; msgDiv.innerHTML = text; 
         chatHistory.appendChild(msgDiv);
         if(scrollToBottom) chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
-    function handleEnter(event) {
-        if (event.altKey && event.key === "Enter") {
-            event.preventDefault(); 
-            sendMessage();
-        }
-    }
+    function handleEnter(event) { if (event.altKey && event.key === "Enter") { event.preventDefault(); sendMessage(); } }
 
     async function sendMessage(overrideText = null, isRetry = false) {
         const inputField = document.getElementById('user-input');
         const text = overrideText || inputField.value.trim();
         if (!text) return;
 
-        if(!isRetry) {
-            appendMessage("user", text);
-            inputField.value = "";
-        }
-        
-        lastUserMessage = text;
-        isUnsaved = true; // 玩家送出對話，標記未儲存
+        if(!isRetry) { appendMessage("user", text); inputField.value = ""; }
+        lastUserMessage = text; isUnsaved = true; 
         document.getElementById('retry-btn').style.display = 'none';
         conversationHistory.push({ role: "user", parts: [{ text: text }] });
 
         try {
-            inputField.disabled = true;
-            inputField.placeholder = "洛棠正在看著你...";
-
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: conversationHistory })
-            });
-
+            inputField.disabled = true; inputField.placeholder = "洛棠正在看著你...";
+            // 這裡過濾掉系統摘要產生的對話，避免影響主要劇情判斷
+            const cleanHistory = conversationHistory.filter(msg => !msg.isSummaryRequest);
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: cleanHistory }) });
             if(!response.ok) throw new Error("API Limit");
             const data = await response.json();
             let replyText = data.candidates[0].content.parts[0].text;
@@ -645,32 +611,81 @@ ${backgroundLore}
             retryBtn.onclick = () => { conversationHistory.pop(); sendMessage(lastUserMessage, true); };
             retryBtn.style.display = 'block';
         } finally {
-            inputField.disabled = false;
-            inputField.placeholder = "說點什麼... (Alt + Enter 傳送)";
-            inputField.focus();
+            inputField.disabled = false; inputField.placeholder = "說點什麼... (Alt + Enter 傳送)"; inputField.focus();
         }
     }
 
-    function toggleCards() {
-        const panel = document.getElementById('cards-panel');
-        panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'flex' : 'none';
-    }
-
+    // === 角色狀態與記憶後臺 UI 更新 ===
     function updatePlayerCardUI() {
         if(!playerData || !playerData.original) return;
         const org = playerData.original;
         let html = `
-            <div class="trait-box"><div class="trait-label">名字/身分</div><div>${org.name} / ${org.status}</div></div>
-            <div class="trait-box"><div class="trait-label">性別/年齡</div><div>${org.gender} / ${org.age}</div></div>
-            <div class="trait-box"><div class="trait-label">性格</div><div>${org.personality}</div></div>
-            <div class="trait-box"><div class="trait-label">外貌</div><div>${org.appearance}</div></div>
+            <div class="trait-box"><div class="trait-label">名字/身分</div><div class="trait-content">${org.name} / ${org.status}</div></div>
+            <div class="trait-box"><div class="trait-label">性別/年齡</div><div class="trait-content">${org.gender} / ${org.age}</div></div>
+            <div class="trait-box"><div class="trait-label">性格</div><div class="trait-content">${org.personality}</div></div>
+            <div class="trait-box"><div class="trait-label">外貌</div><div class="trait-content">${org.appearance}</div></div>
         `;
         if(playerData.dynamic_notes.length > 0) {
             html += `<div class="dynamic-update"><div class="trait-label" style="color:#ff6b81;">【後續羈絆與狀態變更】</div>`;
-            playerData.dynamic_notes.slice(-3).forEach(note => { html += `<div style="font-size: 13px; margin-top:5px;">- ${note}</div>`; });
+            playerData.dynamic_notes.slice(-5).forEach(note => { html += `<div style="font-size: 13px; margin-top:8px; line-height: 1.4;">- ${note}</div>`; });
             html += `</div>`;
         }
         document.getElementById('player-card-content').innerHTML = html;
+    }
+
+    function renderMemories() {
+        const memoryArea = document.getElementById('memory-area');
+        if (!playerData.memories || playerData.memories.length === 0) {
+            memoryArea.innerHTML = `<div style="text-align:center; color: var(--text-dark); margin-top: 30px;">尚無記憶摘要。</div>`;
+            return;
+        }
+        let html = '';
+        playerData.memories.slice().reverse().forEach(mem => {
+            html += `<div class="memory-box">
+                <div class="memory-date">${mem.time} 記錄</div>
+                <div>${mem.content.replace(/\n/g, '<br>')}</div>
+            </div>`;
+        });
+        memoryArea.innerHTML = html;
+    }
+
+    // === 產生劇情摘要 (獨立背景請求) ===
+    async function generateSummary() {
+        const btn = document.getElementById('btn-generate-summary');
+        btn.disabled = true;
+        btn.innerText = "🧠 正在回想記憶，請稍候...";
+        
+        // 複製純淨歷史
+        const cleanHistory = conversationHistory.filter(msg => !msg.isSummaryRequest);
+        // 加入摘要指令，標記為 isSummaryRequest
+        const summaryRequest = { role: "user", parts: [{ text: "【系統指令】請跳脫角色，以第三人稱視角，將目前為止的所有劇情、重要事件以及雙方的關係進展，濃縮成 400 字以內的重點摘要。只輸出摘要內容即可，不要多餘對話。" }], isSummaryRequest: true };
+        
+        const tempHistory = [...cleanHistory, summaryRequest];
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: tempHistory }) });
+            if(!response.ok) throw new Error("API Limit");
+            const data = await response.json();
+            const summaryText = data.candidates[0].content.parts[0].text;
+            
+            // 存入玩家資料的記憶庫
+            const now = new Date();
+            const timeString = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+            playerData.memories.push({ time: timeString, content: summaryText.trim() });
+            
+            // 將此請求指令存入真正歷史(標記屬性，讀檔/主對話時過濾掉)，確保存檔完整
+            conversationHistory.push(summaryRequest);
+            conversationHistory.push({ role: "model", parts: [{ text: summaryText }], isSummaryRequest: true });
+            
+            isUnsaved = true;
+            renderMemories();
+            alert("✅ 記憶摘要生成成功！建議手動點擊存檔保存。");
+        } catch (err) {
+            alert("❌ 摘要生成失敗，可能是 API 流量限制，請稍後再試。");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "🧠 產生當前劇情摘要 (建議累積20-25頁後使用)";
+        }
     }
 </script>
 
