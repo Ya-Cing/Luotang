@@ -8,29 +8,30 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;700&display=swap');
 
         :root {
-            --bg-color: #1a0f0f; --panel-bg: #2a1a1a; --primary-red: #8b2629;
-            --text-main: #e0d0c0; --text-dark: #8a7b6b; --border-color: #5c3a3a;
-            --highlight: #d4af37; --tab-inactive: #1f1212;
+            --bg-color: #120a0a; --panel-bg: #201313; --primary-red: #8b2629;
+            --text-main: #e8dccf; --text-dark: #9a8a7a; --border-color: #5c3a3a;
+            --highlight: #d4af37; --tab-inactive: #1a0f0f;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Noto Serif TC', serif; background-color: var(--bg-color); color: var(--text-main);
             display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden;
-            background-image: radial-gradient(circle at center, #2a1a1a 0%, #1a0f0f 100%);
+            background-image: radial-gradient(circle at center, #201313 0%, #120a0a 100%);
         }
 
+        /* 橫式滿版寬度設定 */
         .container {
-            width: 100%; max-width: 1000px; height: 95vh; background: var(--panel-bg);
-            border: 1px solid var(--border-color); box-shadow: 0 0 30px rgba(139, 38, 41, 0.3);
+            width: 95vw; max-width: 1400px; height: 92vh; background: var(--panel-bg);
+            border: 1px solid var(--border-color); box-shadow: 0 0 40px rgba(139, 38, 41, 0.4);
             display: flex; flex-direction: column; position: relative;
         }
 
         /* 全域返回按鈕 */
         .back-btn {
             background: transparent; border: none; color: var(--text-dark); cursor: pointer;
-            font-family: inherit; font-size: 14px; display: flex; align-items: center; gap: 5px;
-            transition: color 0.3s; margin-bottom: 15px;
+            font-family: inherit; font-size: 15px; display: flex; align-items: center; gap: 5px;
+            transition: color 0.3s; margin-bottom: 20px;
         }
         .back-btn:hover { color: var(--primary-red); }
 
@@ -41,86 +42,89 @@
             z-index: 100; cursor: pointer; transition: opacity 1s ease-in-out;
         }
         .intro-text {
-            color: var(--primary-red); font-size: 24px; letter-spacing: 8px; opacity: 0;
+            color: var(--primary-red); font-size: 28px; letter-spacing: 10px; opacity: 0;
             animation: fadeInOut 5s forwards; text-align: center; line-height: 2;
         }
-        .intro-sub { font-size: 14px; color: #555; letter-spacing: 2px; }
+        .intro-sub { font-size: 15px; color: #555; letter-spacing: 2px; }
         @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(20px); } 30% { opacity: 1; transform: translateY(0); } 70% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
 
         /* 2. 大廳介面 */
         #lobby-screen { display: none; flex: 1; flex-direction: column; justify-content: center; align-items: center; padding: 40px; position: relative; }
         #watermark-btn {
-            position: absolute; top: 20px; right: 20px; width: 30px; height: 30px; cursor: pointer; opacity: 0.8;
+            position: absolute; top: 20px; right: 20px; width: 35px; height: 35px; cursor: pointer; opacity: 0.8;
             filter: brightness(2) drop-shadow(0 0 5px rgba(255,255,255,0.5));
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e0d0c0"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-.97l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65c-.04-.24-.25-.42-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49-.12-.64l2.11 1.63c-.04.31-.07.64-.07.97 0 .33.03.65.07.97l-2.11 1.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.25 1.17-.59 1.69-.99l2.49 1c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.63z"/></svg>') no-repeat center;
             background-size: contain; transition: transform 0.3s, filter 0.3s;
         }
         #watermark-btn:hover { transform: rotate(90deg); filter: brightness(3) drop-shadow(0 0 8px #fff); }
-        .lobby-title { font-size: 32px; color: var(--primary-red); margin-bottom: 40px; letter-spacing: 6px; }
-        .api-input-box { margin-bottom: 30px; width: 100%; max-width: 400px; }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .menu-btn { background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red); padding: 12px 20px; font-size: 16px; cursor: pointer; letter-spacing: 2px; transition: all 0.3s; width: 200px; }
+        .lobby-title { font-size: 36px; color: var(--primary-red); margin-bottom: 40px; letter-spacing: 8px; }
+        .api-input-box { margin-bottom: 40px; width: 100%; max-width: 500px; }
+        .api-input-box input { font-size: 16px; padding: 12px; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .menu-btn { background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red); padding: 15px 25px; font-size: 18px; cursor: pointer; letter-spacing: 3px; transition: all 0.3s; width: 220px; text-align: center; }
         .menu-btn:hover:not(:disabled) { background: var(--primary-red); color: #fff; }
         .menu-btn:disabled { border-color: var(--border-color); color: var(--border-color); cursor: not-allowed; }
 
         /* 3. 維修區 & 密碼區 */
         .overlay-screen { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 50; flex-direction: column; padding: 40px; }
-        .overlay-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 600px; margin: 0 auto; }
+        .overlay-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 800px; margin: 0 auto; }
         
-        /* 4. 角色卡建立區 */
-        #char-creation-screen { display: none; flex: 1; padding: 30px 40px; overflow-y: auto; }
-        .ai-parse-box { background: rgba(255,255,255,0.05); padding: 15px; border: 1px dashed var(--highlight); margin-bottom: 20px; }
-        textarea.standard-input { width: 100%; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; font-family: inherit; resize: vertical; outline: none; }
-        input[type="text"], input[type="password"], select { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border-color); color: var(--text-main); padding: 8px; font-family: inherit; outline: none; }
+        /* 4. 角色卡建立區 (橫向雙欄) */
+        #char-creation-screen { display: none; flex: 1; padding: 40px 60px; overflow-y: auto; }
+        .ai-parse-box { background: rgba(255,255,255,0.05); padding: 20px; border: 1px dashed var(--highlight); margin-bottom: 30px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; } /* 橫向排列的精髓 */
+        
+        textarea.standard-input { width: 100%; height: 90px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; font-family: inherit; resize: vertical; outline: none; font-size: 16px; line-height: 1.6; }
+        input[type="text"], input[type="password"], select { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border-color); color: var(--text-main); padding: 10px; font-family: inherit; outline: none; font-size: 16px; }
         select option { background: var(--panel-bg); color: var(--text-main); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; color: var(--text-dark); font-size: 14px; }
-        .btn-solid { background: var(--primary-red); color: #fff; border: none; padding: 10px 20px; cursor: pointer; margin-top: 10px; transition: background 0.2s; font-family: inherit; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--text-dark); font-size: 15px; }
+        
+        .btn-solid { background: var(--primary-red); color: #fff; border: none; padding: 12px 24px; cursor: pointer; margin-top: 10px; transition: background 0.2s; font-family: inherit; font-size: 15px; letter-spacing: 1px; }
         .btn-solid:hover { background: #a33134; }
         .btn-green { background: #2d5a27; }
         .btn-green:hover { background: #3b7534; }
 
-        /* 5. 系統主視窗 (三欄位 Tab 設計) */
+        /* 5. 系統主視窗 (左側選單、右側大視窗的純橫式設計) */
         #main-system-screen { display: none; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
+        .system-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 25px; border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.4); }
+        .system-header-actions { display: flex; gap: 15px; }
         
-        /* 標題與存檔列 */
-        .system-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.3); }
-        .system-header-actions { display: flex; gap: 10px; }
+        /* 橫式主結構：左右分區 */
+        .system-body { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
         
-        /* Tab 按鈕區 */
-        .tab-nav { display: flex; border-bottom: 1px solid var(--primary-red); background: var(--panel-bg); }
-        .tab-btn { flex: 1; padding: 12px; background: var(--tab-inactive); border: none; border-right: 1px solid var(--border-color); color: var(--text-dark); cursor: pointer; font-family: inherit; font-size: 16px; letter-spacing: 1px; transition: all 0.3s; }
-        .tab-btn:last-child { border-right: none; }
-        .tab-btn:hover { background: rgba(139, 38, 41, 0.2); color: var(--text-main); }
-        .tab-btn.active { background: var(--primary-red); color: #fff; font-weight: bold; }
+        /* 左側導航 */
+        .tab-nav { display: flex; flex-direction: column; width: 220px; background: var(--tab-inactive); border-right: 1px solid var(--border-color); }
+        .tab-btn { padding: 25px 20px; background: transparent; border: none; border-bottom: 1px solid var(--border-color); color: var(--text-dark); cursor: pointer; font-family: inherit; font-size: 17px; text-align: left; letter-spacing: 2px; transition: all 0.3s; }
+        .tab-btn:hover { background: rgba(139, 38, 41, 0.15); color: var(--text-main); }
+        .tab-btn.active { background: var(--primary-red); color: #fff; border-right: 3px solid var(--highlight); }
 
-        /* Tab 內容區 */
+        /* 右側內容區 */
         .tab-content { display: none; flex: 1; overflow: hidden; flex-direction: column; background: var(--bg-color); }
         .tab-content.active { display: flex; }
 
-        /* Tab 1: 聊天區 */
-        #chat-history { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .message { max-width: 85%; line-height: 1.6; padding: 12px 16px; font-size: 15px; border-radius: 4px; white-space: pre-wrap; }
-        .message.bot { align-self: flex-start; background: rgba(139, 38, 41, 0.1); border-left: 2px solid var(--primary-red); }
-        .message.user { align-self: flex-end; background: rgba(255, 255, 255, 0.05); border-right: 2px solid var(--text-dark); }
-        .input-area { display: flex; padding: 15px 20px; border-top: 1px dashed var(--border-color); gap: 10px; align-items: center; background: var(--panel-bg); }
-        #user-input { flex: 1; border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.2); color: var(--text-main); font-family: inherit; resize: vertical; height: 60px; outline: none; }
-        .error-retry-btn { display: none; background: var(--highlight); color: #000; font-weight: bold; width: 100%; margin: 10px 0; }
+        /* Tab 1: 聊天區 (高易讀性) */
+        #chat-history { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .message { max-width: 80%; line-height: 1.8; padding: 15px 20px; font-size: 16px; border-radius: 6px; white-space: pre-wrap; letter-spacing: 0.5px; }
+        .message.bot { align-self: flex-start; background: rgba(139, 38, 41, 0.12); border-left: 3px solid var(--primary-red); }
+        .message.user { align-self: flex-end; background: rgba(255, 255, 255, 0.05); border-right: 3px solid var(--text-dark); }
+        .input-area { display: flex; padding: 20px 30px; border-top: 1px dashed var(--border-color); gap: 15px; align-items: center; background: var(--panel-bg); }
+        #user-input { flex: 1; border: 1px solid var(--border-color); padding: 12px 15px; background: rgba(0,0,0,0.3); color: var(--text-main); font-family: inherit; resize: vertical; height: 75px; outline: none; font-size: 16px; line-height: 1.6; }
+        .error-retry-btn { display: none; background: var(--highlight); color: #000; font-weight: bold; width: calc(100% - 60px); margin: 10px 30px; font-size: 16px; }
 
-        /* Tab 2: 角色與狀態區 */
-        #status-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; gap: 20px; }
-        .status-col { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 20px; border-radius: 4px; }
-        .card-title { color: var(--primary-red); font-size: 20px; margin-bottom: 15px; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        .trait-box { margin-bottom: 15px; }
-        .trait-label { color: var(--highlight); font-size: 13px; margin-bottom: 3px; }
-        .trait-content { font-size: 14px; line-height: 1.5; color: var(--text-main); }
-        .dynamic-update { border-top: 1px dotted var(--primary-red); margin-top: 20px; padding-top: 15px; color: #ffb6c1; }
-        .npc-item { margin-bottom: 10px; border-left: 2px solid var(--text-dark); padding-left: 10px; }
+        /* Tab 2: 角色與狀態區 (橫向佈局) */
+        #status-area { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: row; gap: 30px; }
+        .status-col { flex: 1; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); padding: 25px; border-radius: 6px; }
+        .card-title { color: var(--primary-red); font-size: 22px; margin-bottom: 20px; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; letter-spacing: 2px; }
+        .trait-box { margin-bottom: 18px; }
+        .trait-label { color: var(--highlight); font-size: 14px; margin-bottom: 5px; }
+        .trait-content { font-size: 15px; line-height: 1.7; color: var(--text-main); }
+        .dynamic-update { border-top: 1px dotted var(--primary-red); margin-top: 25px; padding-top: 20px; color: #ffb6c1; }
+        .npc-item { margin-bottom: 12px; border-left: 2px solid var(--text-dark); padding-left: 12px; line-height: 1.6; }
 
         /* Tab 3: 記憶後臺 */
-        #memory-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .memory-box { background: rgba(0,0,0,0.2); border: 1px dashed var(--highlight); padding: 20px; border-radius: 4px; line-height: 1.6; }
-        .memory-date { font-size: 12px; color: var(--text-dark); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        #memory-area { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; gap: 20px; }
+        .memory-box { background: rgba(0,0,0,0.3); border: 1px dashed var(--highlight); padding: 25px; border-radius: 6px; line-height: 1.8; font-size: 16px; }
+        .memory-date { font-size: 13px; color: var(--text-dark); margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
 
     </style>
 </head>
@@ -142,137 +146,147 @@
         <h1 class="lobby-title">怡歡樓</h1>
         
         <div class="api-input-box form-group">
-            <label style="text-align:center;">請先輸入 API KEY 以啟用功能</label>
+            <label style="text-align:center; font-size: 16px;">請先輸入 API KEY 以啟用功能</label>
             <input type="password" id="lobby-api-key" placeholder="Gemini API Key..." oninput="checkApiKey()" style="text-align:center;">
         </div>
 
         <div class="menu-grid">
-            <button class="menu-btn" id="btn-new" disabled onclick="navigate('char-creation')">新面孔 (新建檔)</button>
-            <button class="menu-btn" id="btn-load" disabled onclick="loadGameFromBrowser()">舊相識 (讀取瀏覽器)</button>
-            <button class="menu-btn" id="btn-import" disabled onclick="document.getElementById('import-save-file').click()">匯入實體存檔</button>
+            <button class="menu-btn" id="btn-new" disabled onclick="navigate('char-creation')">新面孔<br><span style="font-size:12px;">(新建檔)</span></button>
+            <button class="menu-btn" id="btn-load" disabled onclick="loadGameFromBrowser()">舊相識<br><span style="font-size:12px;">(讀取瀏覽器)</span></button>
+            <button class="menu-btn" id="btn-import" disabled onclick="document.getElementById('import-save-file').click()">實體紀錄<br><span style="font-size:12px;">(匯入存檔)</span></button>
             <input type="file" id="import-save-file" accept=".json" style="display:none" onchange="importSave(event)">
-            <button class="menu-btn" id="btn-delete" disabled onclick="deleteSave()" style="border-color: #555; color: #888;">抹除痕跡</button>
+            <button class="menu-btn" id="btn-delete" disabled onclick="deleteSave()" style="border-color: #555; color: #888;">抹除痕跡<br><span style="font-size:12px;">(清除快取)</span></button>
         </div>
     </div>
 
     <!-- 維修密碼區 -->
     <div id="auth-screen" class="overlay-screen">
-        <button class="back-btn" onclick="closeScreens()">⬅ 返回大廳</button>
+        <button class="back-btn" onclick="closeScreens()" style="align-self: flex-start;">⬅ 返回大廳</button>
         <div class="overlay-content">
-            <h2 id="auth-title" style="color:var(--primary-red); margin-bottom: 20px;">資料維護權限確認</h2>
-            <p id="auth-desc" style="margin-bottom: 15px; font-size: 14px; color: var(--text-dark); display: none; text-align:center;"></p>
-            <input type="password" id="admin-pwd" placeholder="輸入密碼" style="max-width: 300px; margin-bottom: 20px; text-align:center;">
-            <button id="auth-action-btn" class="btn-solid" onclick="verifyAdmin()">驗證</button>
-            <p id="auth-msg" style="color: red; margin-top: 10px; font-size: 14px;"></p>
+            <h2 id="auth-title" style="color:var(--primary-red); margin-bottom: 25px; letter-spacing: 2px;">資料維護權限確認</h2>
+            <p id="auth-desc" style="margin-bottom: 20px; font-size: 15px; color: var(--text-dark); display: none; text-align:center;"></p>
+            <input type="password" id="admin-pwd" placeholder="輸入密碼" style="width: 100%; max-width: 350px; margin-bottom: 25px; text-align:center;">
+            <button id="auth-action-btn" class="btn-solid" style="font-size: 16px;" onclick="verifyAdmin()">驗證</button>
+            <p id="auth-msg" style="color: #ff6b81; margin-top: 15px; font-size: 15px;"></p>
         </div>
     </div>
 
     <!-- 維修資料庫 -->
     <div id="maintenance-screen" class="overlay-screen">
-        <button class="back-btn" onclick="closeScreens()">⬅ 返回大廳</button>
-        <div class="overlay-content" style="align-items: flex-start; justify-content: flex-start; padding-top: 20px;">
-            <h2 style="color:var(--highlight); margin-bottom: 10px;">後台資料維修區</h2>
-            <button class="btn-solid" style="background:#555; font-size:12px; margin-bottom: 20px;" onclick="resetAdminPwd()">重新設定維修區密碼</button>
-            <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-dark);">可一次選取多個 txt 檔匯入，系統將自動整合為背景世界觀（可用於添加其他角色設定等）。</p>
-            <input type="file" id="lore-files" multiple accept=".txt" style="margin-bottom: 20px; color: white;">
-            <button class="btn-solid" onclick="uploadLore()">寫入記憶庫</button>
-            <div id="lore-status" style="margin-top: 20px; font-size: 14px; white-space: pre-wrap; width: 100%; max-height: 400px; overflow-y: auto; background:rgba(0,0,0,0.5); padding:10px; border:1px solid #333;"></div>
+        <button class="back-btn" onclick="closeScreens()" style="align-self: flex-start;">⬅ 返回大廳</button>
+        <div class="overlay-content" style="align-items: flex-start; justify-content: flex-start; max-width: 900px; height: 100%;">
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 20px;">
+                <h2 style="color:var(--highlight); letter-spacing: 2px;">後臺記憶庫</h2>
+                <button class="btn-solid" style="background:#555; font-size:13px; margin: 0;" onclick="resetAdminPwd()">重新設定密碼</button>
+            </div>
+            <p style="margin-bottom: 15px; font-size: 15px; color: var(--text-dark); line-height: 1.6;">您可以在此直接手打輸入洛棠、艾柏特或其他重要配角的擴充設定。若有大量資料，也可選擇上傳 txt 檔案。系統會自動將手打內容與上傳檔案合併保存。</p>
+            
+            <!-- 手打輸入區 -->
+            <textarea id="manual-lore-input" placeholder="請在此輸入或貼上額外設定..." style="width: 100%; height: 200px; background: rgba(0,0,0,0.6); color: var(--text-main); border: 1px solid var(--border-color); padding: 15px; font-family: inherit; font-size: 15px; line-height: 1.6; resize: vertical; margin-bottom: 15px; outline: none;"></textarea>
+            
+            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px; width: 100%;">
+                <input type="file" id="lore-files" multiple accept=".txt" style="flex: 1; color: white;">
+                <button class="btn-solid" style="margin: 0; font-size: 16px; padding: 12px 30px;" onclick="uploadLore()">💾 寫入記憶庫</button>
+            </div>
+            
+            <div id="lore-status" style="display:none;"></div>
         </div>
     </div>
 
-    <!-- 建立角色卡 -->
+    <!-- 角色卡建立區 -->
     <div id="char-creation-screen">
         <button class="back-btn" onclick="navigate('lobby')">⬅ 返回大廳</button>
-        <h2 style="color:var(--primary-red); margin-bottom: 20px;">建立玩家角色卡</h2>
+        <h2 style="color:var(--primary-red); margin-bottom: 25px; letter-spacing: 2px; font-size: 24px;">建立玩家角色卡</h2>
         
         <div class="ai-parse-box">
-            <label>AI 文字識別 (選填)：貼上一段自我介紹，讓 AI 自動填寫下方欄位</label>
-            <textarea id="ai-parse-input" class="standard-input" placeholder="例如：我叫沈默，24歲男性，是個冷酷的刺客，穿著一身黑衣..."></textarea>
-            <button class="btn-solid" onclick="parseCharacterText()" style="font-size: 12px; padding: 5px 10px;">自動識別</button>
-            <span id="parse-status" style="font-size: 12px; color: var(--highlight); margin-left: 10px;"></span>
+            <label style="font-size: 16px; margin-bottom: 10px;">AI 文字識別 (選填)：貼上一段自我介紹，讓 AI 自動填寫下方欄位</label>
+            <textarea id="ai-parse-input" class="standard-input" placeholder="例如：我叫沈默，24歲男性，是個冷酷的劍客，穿著一身黑衣..."></textarea>
+            <div style="margin-top: 10px;">
+                <button class="btn-solid" onclick="parseCharacterText()" style="font-size: 14px; padding: 8px 16px; margin: 0;">自動識別</button>
+                <span id="parse-status" style="font-size: 14px; color: var(--highlight); margin-left: 15px;"></span>
+            </div>
         </div>
 
-        <div class="form-group"><label>名字</label><input type="text" id="p-name"></div>
-        <div class="form-group">
-            <label>性別</label>
-            <select id="p-gender">
-                <option value="男">男</option>
-                <option value="女">女</option>
-                <option value="其他">其他</option>
-            </select>
+        <div class="form-grid">
+            <div class="form-group"><label>名字</label><input type="text" id="p-name"></div>
+            <div class="form-group">
+                <label>性別</label>
+                <select id="p-gender">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div class="form-group"><label>年齡</label><input type="text" id="p-age"></div>
+            <div class="form-group"><label>身分</label><input type="text" id="p-status"></div>
+            <div class="form-group"><label>性格</label><input type="text" id="p-personality"></div>
+            <div class="form-group"><label>外貌特徵</label><input type="text" id="p-appearance"></div>
         </div>
-        <div class="form-group"><label>年齡</label><input type="text" id="p-age"></div>
-        <div class="form-group"><label>性格</label><input type="text" id="p-personality"></div>
-        <div class="form-group"><label>外貌特徵</label><input type="text" id="p-appearance"></div>
-        <div class="form-group"><label>身分</label><input type="text" id="p-status"></div>
-        <button class="btn-solid" style="width:100%; margin-top:20px; font-size:16px;" onclick="initChat()">踏入花樓</button>
+        <button class="btn-solid" style="width:100%; margin-top:30px; font-size:18px; padding: 15px;" onclick="initChat()">踏入花樓</button>
     </div>
 
-    <!-- 系統主視窗 (三欄位設計) -->
+    <!-- 系統主視窗 (左選單、右內容) -->
     <div id="main-system-screen">
         <div class="system-header">
-            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">⬅ 退出</button>
+            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">⬅ 退出大廳</button>
             <div class="system-header-actions">
-                <button class="btn-solid btn-green" style="padding: 6px 12px; margin:0;" onclick="saveToBrowser()">💾 瀏覽器存檔</button>
-                <button class="btn-solid" style="padding: 6px 12px; margin:0; background: #555;" onclick="exportSaveFile()">📥 下載存檔</button>
+                <button class="btn-solid btn-green" style="padding: 8px 16px; margin:0; font-size: 14px;" onclick="saveToBrowser()">💾 瀏覽器存檔</button>
+                <button class="btn-solid" style="padding: 8px 16px; margin:0; background: #555; font-size: 14px;" onclick="exportSaveFile()">📥 下載實體存檔</button>
             </div>
         </div>
 
-        <!-- 頁籤導覽 -->
-        <div class="tab-nav">
-            <button class="tab-btn active" onclick="switchTab('chat')">💬 聊天行動區</button>
-            <button class="tab-btn" onclick="switchTab('status')">👤 角色與狀態</button>
-            <button class="tab-btn" onclick="switchTab('memory')">🧠 記憶後臺</button>
-        </div>
-
-        <!-- Tab 1: 聊天區 -->
-        <div id="tab-chat" class="tab-content active">
-            <div id="chat-history"></div>
-            <div style="padding: 0 20px;"><button class="btn-solid error-retry-btn" id="retry-btn"></button></div>
-            <div class="input-area">
-                <textarea id="user-input" placeholder="說點什麼... (Alt + Enter 傳送)" onkeydown="handleEnter(event)"></textarea>
-                <button class="btn-solid" style="margin:0; height: 60px; padding: 0 25px;" onclick="sendMessage()">回應</button>
+        <div class="system-body">
+            <!-- 左側導航 -->
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('chat')">💬 聊天行動區</button>
+                <button class="tab-btn" onclick="switchTab('status')">👤 角色與狀態</button>
+                <button class="tab-btn" onclick="switchTab('memory')">🧠 記憶後臺</button>
             </div>
-        </div>
 
-        <!-- Tab 2: 角色與狀態 -->
-        <div id="tab-status" class="tab-content">
-            <div id="status-area">
-                <!-- 左側：玩家卡 -->
-                <div class="status-col">
-                    <div class="card-title">玩家角色卡</div>
-                    <div id="player-card-content"></div>
-                </div>
-                <!-- 右側：官方設定與配角 -->
-                <div class="status-col">
-                    <div class="card-title">怡歡樓 情報卷宗</div>
-                    
-                    <div class="trait-box"><div class="trait-label">【頭牌｜洛棠】</div>
-                        <div class="trait-content">26歲男，氣質雌雄莫辨，左眼下有淚痣，常穿大紅薄紗。性格浪蕩自毀、心房如刺蝟，極度抗拒「救贖與真心」。靠「春燼」藥癮維持妖嬈與清醒，不用藥則暴躁易怒。[cite: 1, 5, 10]</div>
-                    </div>
-                    
-                    <div class="trait-box"><div class="trait-label">【重要周邊人物】[cite: 7]</div>
-                        <div class="npc-item"><b>杜三爺 (龜公)</b>：笑面虎，算盤打得精，對洛棠又氣又依賴。</div>
-                        <div class="npc-item"><b>蘇嬤 (媽媽桑)</b>：眼神如針，當年塑形洛棠的教鞭。</div>
-                        <div class="npc-item"><b>雲翎 (花魁)</b>：清冷算計，與洛棠表面姐弟，實則互相試探。</div>
-                        <div class="npc-item"><b>秦四娘 & 溫先生</b>：洛棠的唱戲與撫琴教習，藏有洛父冤案線索。</div>
-                        <div class="npc-item"><b>小瓷 (清倌)</b>：十七八歲，把洛棠當神，容易因想幫忙而闖禍。</div>
-                    </div>
+            <!-- 右側內容區 -->
+            
+            <!-- Tab 1: 聊天區 -->
+            <div id="tab-chat" class="tab-content active">
+                <div id="chat-history"></div>
+                <div><button class="btn-solid error-retry-btn" id="retry-btn"></button></div>
+                <div class="input-area">
+                    <textarea id="user-input" placeholder="說點什麼... (Alt + Enter 傳送)" onkeydown="handleEnter(event)"></textarea>
+                    <button class="btn-solid" style="margin:0; height: 75px; padding: 0 35px; font-size: 18px;" onclick="sendMessage()">回應</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Tab 3: 記憶後臺 -->
-        <div id="tab-memory" class="tab-content">
-            <div style="padding: 20px 20px 0;">
-                <button class="btn-solid" style="width: 100%; font-size: 16px; margin-top:0;" id="btn-generate-summary" onclick="generateSummary()">🧠 產生當前劇情摘要 (建議累積20-25頁後使用)</button>
-                <p style="font-size: 12px; color: var(--text-dark); margin-top: 10px; text-align: center;">自動摘要將在背景呼叫 AI，請稍候片刻。</p>
+            <!-- Tab 2: 角色與狀態 -->
+            <div id="tab-status" class="tab-content">
+                <div id="status-area">
+                    <div class="status-col">
+                        <div class="card-title">玩家角色卡</div>
+                        <div id="player-card-content"></div>
+                    </div>
+                    <div class="status-col">
+                        <div class="card-title">怡歡樓 情報卷宗</div>
+                        <div class="trait-box"><div class="trait-label">【頭牌｜洛棠】</div>
+                            <div class="trait-content">26歲男，氣質雌雄莫辨，左眼下有淚痣，常穿大紅薄紗。性格浪蕩自毀、心房如刺蝟，極度抗拒「救贖與真心」。靠「春燼」藥癮維持妖嬈與清醒，不用藥則暴躁易怒。[cite: 1, 5, 10]</div>
+                        </div>
+                        <div class="trait-box"><div class="trait-label">【重要周邊人物】[cite: 7]</div>
+                            <div class="npc-item"><b>杜三爺 (龜公)</b>：笑面虎，算盤打得精，對洛棠又氣又依賴。</div>
+                            <div class="npc-item"><b>蘇嬤 (媽媽桑)</b>：眼神如針，當年塑形洛棠的教鞭。</div>
+                            <div class="npc-item"><b>雲翎 (花魁)</b>：清冷算計，與洛棠表面姐弟，實則互相試探。</div>
+                            <div class="npc-item"><b>秦四娘 & 溫先生</b>：洛棠的唱戲與撫琴教習，藏有洛父冤案線索。</div>
+                            <div class="npc-item"><b>小瓷 (清倌)</b>：十七八歲，把洛棠當神，容易因想幫忙而闖禍。</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="memory-area">
-                <!-- 記憶區塊將動態生成於此 -->
+
+            <!-- Tab 3: 記憶後臺 -->
+            <div id="tab-memory" class="tab-content">
+                <div style="padding: 30px 30px 0;">
+                    <button class="btn-solid" style="width: 100%; font-size: 18px; margin-top:0; padding: 15px;" id="btn-generate-summary" onclick="generateSummary()">🧠 產生當前劇情摘要 (建議累積20-25頁後使用)</button>
+                    <p style="font-size: 14px; color: var(--text-dark); margin-top: 15px; text-align: center;">自動摘要將在背景呼叫 AI 整理，完成後將永久保存在下方。</p>
+                </div>
+                <div id="memory-area"></div>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -284,7 +298,7 @@
     let isUnsaved = false;
     let introTimer;
 
-    // === 開場動畫跳過機制 ===
+    // === 開場動畫 ===
     window.onload = () => {
         introTimer = setTimeout(() => { skipIntro(); }, 4800); 
         const savedKey = localStorage.getItem('luotang_api_key');
@@ -296,10 +310,10 @@
         setTimeout(() => {
             document.getElementById('intro-anim').style.display = 'none';
             document.getElementById('lobby-screen').style.display = 'flex';
-        }, 500); // 等待淡出動畫
+        }, 500); 
     }
 
-    // === 密碼加密函式 (SHA-256) ===
+    // === 加解密 ===
     async function hashPassword(pwd) {
         const msgBuffer = new TextEncoder().encode(pwd);
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -316,7 +330,7 @@
         apiKey = val;
     }
 
-    // === 頁面導航與 Tab 切換 ===
+    // === 導航與 Tab 切換 ===
     function navigate(screenId) {
         document.getElementById('lobby-screen').style.display = 'none';
         document.getElementById('char-creation-screen').style.display = 'none';
@@ -334,20 +348,17 @@
     }
 
     function switchTab(tabId) {
-        // 更新按鈕狀態
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         event.currentTarget.classList.add('active');
-        // 更新內容區塊
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
         document.getElementById('tab-' + tabId).classList.add('active');
-        // 切換到聊天區時自動滾動到底部
         if(tabId === 'chat') {
             const chatBox = document.getElementById('chat-history');
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
 
-    // === 維修區功能 ===
+    // === 維修區 (手打與檔案合併) ===
     function openAuth() {
         const savedHash = localStorage.getItem('luotang_admin_hash');
         if (savedHash === "NONE") return showMaintenanceScreen();
@@ -382,8 +393,9 @@
     }
     function showMaintenanceScreen() {
         document.getElementById('maintenance-screen').style.display = 'flex';
-        const currentLore = localStorage.getItem('custom_background_lore');
-        document.getElementById('lore-status').innerText = currentLore ? "【當前記憶庫已有資料】\n" + currentLore : "目前記憶庫為空。";
+        // 載入舊有的記憶庫至手打輸入框中，方便編輯
+        const currentLore = localStorage.getItem('custom_background_lore') || "";
+        document.getElementById('manual-lore-input').value = currentLore;
     }
     function closeScreens() { document.getElementById('auth-screen').style.display = 'none'; document.getElementById('maintenance-screen').style.display = 'none'; }
     function resetAdminPwd() {
@@ -395,12 +407,19 @@
     }
     async function uploadLore() {
         const fileInput = document.getElementById('lore-files');
-        if (fileInput.files.length === 0) return alert("請選擇檔案");
-        let combinedText = "";
-        for (let file of fileInput.files) combinedText += `\n--- [檔案來源: ${file.name}] ---\n${await file.text()}\n`;
+        let manualText = document.getElementById('manual-lore-input').value.trim();
+        
+        let combinedText = manualText;
+        // 若有上傳檔案，自動將文字附加在手打內容後方
+        if (fileInput.files.length > 0) {
+            combinedText += "\n\n=== 附加檔案資料 ===\n";
+            for (let file of fileInput.files) combinedText += `\n--- [檔案來源: ${file.name}] ---\n${await file.text()}\n`;
+        }
+        
         localStorage.setItem('custom_background_lore', combinedText);
-        document.getElementById('lore-status').innerText = "✅ 已成功寫入以下資料：\n" + combinedText;
-        alert("資料已寫入記憶庫！新開局時將自動載入。");
+        document.getElementById('manual-lore-input').value = combinedText; // 更新顯示
+        alert("💾 資料已成功寫入記憶庫！新開局時系統將自動載入這些設定。");
+        fileInput.value = ''; // 清空檔案選擇器
     }
 
     // === 手動存檔/匯出/匯入/刪除 ===
@@ -412,10 +431,16 @@
         checkApiKey();
     }
     function exportSaveFile() {
+        const defaultName = `洛棠存檔_${new Date().toISOString().slice(0,10).replace(/-/g, '')}`;
+        let filename = prompt("請輸入存檔名稱：", defaultName);
+        if (filename === null) return; // 取消下載
+        filename = filename.trim() || defaultName;
+        if (!filename.endsWith('.json')) filename += '.json';
+
         const data = { history: conversationHistory, player: playerData };
-        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = `洛棠存檔_${new Date().toISOString().slice(0,10)}.json`; a.click();
+        const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
         URL.revokeObjectURL(url);
         isUnsaved = false; 
     }
@@ -429,7 +454,7 @@
                 if(data.history && data.player) {
                     localStorage.setItem('luotang_chat_save', JSON.stringify(data.history));
                     localStorage.setItem('luotang_player_data', JSON.stringify(data.player));
-                    checkApiKey(); alert("存檔匯入成功！請點擊「舊相識」繼續。");
+                    checkApiKey(); alert("存檔匯入成功！請點擊「舊相識 (讀取瀏覽器)」繼續。");
                 } else alert("存檔格式錯誤");
             } catch(err) { alert("讀取失敗，檔案可能損毀"); }
         };
@@ -452,7 +477,7 @@
         statusSpan.innerText = "識別中...";
         const prompt = `請分析以下玩家的自我介紹，並以 JSON 格式提取資訊。如果未提及，請填入"未知"。性別只能是"男"、"女"或"其他"。\n自我介紹: "${text}"\n必須輸出的 JSON 格式: {"name":"...","gender":"...","age":"...","personality":"...","appearance":"...","status":"..."}\n請只輸出 JSON，不要有其他文字。`;
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] }) });
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] }) });
             const data = await response.json();
             const parsed = JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim());
             document.getElementById('p-name').value = parsed.name || ""; document.getElementById('p-gender').value = parsed.gender || "其他"; document.getElementById('p-age').value = parsed.age || ""; document.getElementById('p-personality').value = parsed.personality || ""; document.getElementById('p-appearance').value = parsed.appearance || ""; document.getElementById('p-status').value = parsed.status || "";
@@ -471,7 +496,7 @@
         localStorage.setItem('luotang_api_key', apiKey);
         conversationHistory = JSON.parse(localStorage.getItem('luotang_chat_save'));
         playerData = JSON.parse(localStorage.getItem('luotang_player_data'));
-        if (!playerData.memories) playerData.memories = []; // 相容舊存檔
+        if (!playerData.memories) playerData.memories = [];
         isUnsaved = false;
         
         navigate('chat');
@@ -480,7 +505,6 @@
         chatBox.innerHTML = "";
         for(let i = 1; i < conversationHistory.length; i++) {
             const msg = conversationHistory[i];
-            // 過濾掉後台產生摘要的對話記錄
             if (msg.isSummaryRequest) continue;
             appendMessage(msg.role === "model" ? "bot" : "user", msg.parts[0].text.replace(/\[PLAYER_UPDATE:.*?\]/g, ''), false);
         }
@@ -549,7 +573,7 @@
         inputField.disabled = true; inputField.placeholder = "洛棠正在樓上打量你，準備開口..."; retryBtn.style.display = 'none';
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: conversationHistory }) });
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: conversationHistory }) });
             if(!response.ok) throw new Error("API Limit");
             const data = await response.json();
             const replyText = data.candidates[0].content.parts[0].text;
@@ -587,10 +611,9 @@
 
         try {
             inputField.disabled = true; inputField.placeholder = "洛棠正在看著你...";
-            // 這裡過濾掉系統摘要產生的對話，避免影響主要劇情判斷
             const cleanHistory = conversationHistory.filter(msg => !msg.isSummaryRequest);
             
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: cleanHistory }) });
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: cleanHistory }) });
             if(!response.ok) throw new Error("API Limit");
             const data = await response.json();
             let replyText = data.candidates[0].content.parts[0].text;
@@ -627,7 +650,7 @@
         `;
         if(playerData.dynamic_notes.length > 0) {
             html += `<div class="dynamic-update"><div class="trait-label" style="color:#ff6b81;">【後續羈絆與狀態變更】</div>`;
-            playerData.dynamic_notes.slice(-5).forEach(note => { html += `<div style="font-size: 13px; margin-top:8px; line-height: 1.4;">- ${note}</div>`; });
+            playerData.dynamic_notes.slice(-5).forEach(note => { html += `<div style="font-size: 14px; margin-top:10px; line-height: 1.5;">- ${note}</div>`; });
             html += `</div>`;
         }
         document.getElementById('player-card-content').innerHTML = html;
@@ -636,7 +659,7 @@
     function renderMemories() {
         const memoryArea = document.getElementById('memory-area');
         if (!playerData.memories || playerData.memories.length === 0) {
-            memoryArea.innerHTML = `<div style="text-align:center; color: var(--text-dark); margin-top: 30px;">尚無記憶摘要。</div>`;
+            memoryArea.innerHTML = `<div style="text-align:center; color: var(--text-dark); margin-top: 30px; font-size: 16px;">尚無記憶摘要。</div>`;
             return;
         }
         let html = '';
@@ -649,43 +672,32 @@
         memoryArea.innerHTML = html;
     }
 
-    // === 產生劇情摘要 (獨立背景請求) ===
+    // === 產生劇情摘要 ===
     async function generateSummary() {
         const btn = document.getElementById('btn-generate-summary');
-        btn.disabled = true;
-        btn.innerText = "🧠 正在回想記憶，請稍候...";
+        btn.disabled = true; btn.innerText = "🧠 正在回想記憶，請稍候...";
         
-        // 複製純淨歷史
         const cleanHistory = conversationHistory.filter(msg => !msg.isSummaryRequest);
-        // 加入摘要指令，標記為 isSummaryRequest
-        const summaryRequest = { role: "user", parts: [{ text: "【系統指令】請跳脫角色，以第三人稱視角，將目前為止的所有劇情、重要事件以及雙方的關係進展，濃縮成 400 字以內的重點摘要。只輸出摘要內容即可，不要多餘對話。" }], isSummaryRequest: true };
-        
+        const summaryRequest = { role: "user", parts: [{ text: "【系統指令】請跳脫角色，以第三人稱視角，將目前為止的所有劇情、重要事件以及雙方的關係進展，濃縮成 500 字以內的重點摘要。只輸出摘要內容即可，不要多餘對話。" }], isSummaryRequest: true };
         const tempHistory = [...cleanHistory, summaryRequest];
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: tempHistory }) });
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: tempHistory }) });
             if(!response.ok) throw new Error("API Limit");
             const data = await response.json();
             const summaryText = data.candidates[0].content.parts[0].text;
             
-            // 存入玩家資料的記憶庫
             const now = new Date();
             const timeString = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
             playerData.memories.push({ time: timeString, content: summaryText.trim() });
             
-            // 將此請求指令存入真正歷史(標記屬性，讀檔/主對話時過濾掉)，確保存檔完整
             conversationHistory.push(summaryRequest);
             conversationHistory.push({ role: "model", parts: [{ text: summaryText }], isSummaryRequest: true });
             
-            isUnsaved = true;
-            renderMemories();
+            isUnsaved = true; renderMemories();
             alert("✅ 記憶摘要生成成功！建議手動點擊存檔保存。");
-        } catch (err) {
-            alert("❌ 摘要生成失敗，可能是 API 流量限制，請稍後再試。");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "🧠 產生當前劇情摘要 (建議累積20-25頁後使用)";
-        }
+        } catch (err) { alert("❌ 摘要生成失敗，可能是 API 流量限制，請稍後再試。"); } 
+        finally { btn.disabled = false; btn.innerText = "🧠 產生當前劇情摘要 (建議累積20-25頁後使用)"; }
     }
 </script>
 
