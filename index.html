@@ -27,6 +27,12 @@
             background-image: radial-gradient(circle at center, #1c0b0b 0%, #050202 100%);
         }
 
+        /* --- 全域自訂捲軸美化 --- */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-red); }
+
         .container {
             width: 100vw; height: 100vh; background: transparent;
             display: flex; flex-direction: column; position: relative;
@@ -61,7 +67,6 @@
         }
         .door::before { top: 10%; height: 30%; }
         .door::after { bottom: 10%; height: 45%; }
-        
         #door-overlay.active { pointer-events: all; }
         #door-overlay.active .door-left { transform: rotateY(0deg); }
         #door-overlay.active .door-right { transform: rotateY(0deg); }
@@ -112,7 +117,7 @@
             background-size: contain; transition: transform 0.3s, filter 0.3s;
         }
         #watermark-btn:hover { transform: rotate(90deg); filter: brightness(3) drop-shadow(0 0 15px #fff); }
-        .lobby-title { font-size: 52px; color: var(--primary-red); margin-bottom: 30px; letter-spacing: 15px; font-weight: bold; text-shadow: 0 0 10px rgba(168, 46, 49, 0.5); }
+        .lobby-title { font-size: 48px; color: var(--primary-red); margin-bottom: 50px; letter-spacing: 15px; font-weight: bold; text-shadow: 0 0 10px rgba(168, 46, 49, 0.5); }
         
         .api-input-box { margin-bottom: 40px; width: 100%; max-width: 500px; text-align: center; }
         .api-input-box input { width: 100%; background: rgba(0,0,0,0.7); border: 2px solid var(--border-color); color: #fff; padding: 18px; font-family: inherit; font-size: 18px; outline: none; text-align: center; border-radius: 6px; font-weight: bold; transition: border-color 0.3s; }
@@ -122,7 +127,7 @@
 
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         
-        /* --- 紗簾按鈕特效 --- */
+        /* 紗簾按鈕特效 */
         .menu-btn { 
             position: relative; overflow: hidden; background: rgba(0,0,0,0.5); 
             border: 2px solid var(--primary-red); color: var(--text-main); 
@@ -130,29 +135,18 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             width: 280px; text-align: center; font-weight: bold; border-radius: 4px; 
         }
-        
-        /* 左右紗簾 */
         .menu-btn::before, .menu-btn::after {
             content: ''; position: absolute; top: -10%; width: 55%; height: 120%;
             background: linear-gradient(90deg, rgba(168, 46, 49, 0.05), rgba(168, 46, 49, 0.5), rgba(168, 46, 49, 0.05));
-            /* 模擬布料皺褶 */
             background-image: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px);
-            box-shadow: 0 0 15px rgba(168,46,49,0.5);
-            opacity: 0; pointer-events: none; z-index: 1;
+            box-shadow: 0 0 15px rgba(168,46,49,0.5); opacity: 0; pointer-events: none; z-index: 1;
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s;
         }
         .menu-btn::before { left: -5%; transform: translateX(-100%); border-right: 2px solid rgba(255,255,255,0.2); }
         .menu-btn::after { right: -5%; transform: translateX(100%); border-left: 2px solid rgba(255,255,255,0.2); }
-
-        .menu-btn:hover:not(:disabled) { 
-            border-color: #ff4a4e; box-shadow: 0 10px 30px rgba(168,46,49,0.7); 
-            transform: translateY(-5px) scale(1.03); 
-        }
-        /* 紗簾合攏 */
+        .menu-btn:hover:not(:disabled) { border-color: #ff4a4e; box-shadow: 0 10px 30px rgba(168,46,49,0.7); transform: translateY(-5px) scale(1.03); }
         .menu-btn:hover:not(:disabled)::before { transform: translateX(0); opacity: 1; }
         .menu-btn:hover:not(:disabled)::after { transform: translateX(0); opacity: 1; }
-        
-        /* 確保文字在紗簾之上 */
         .menu-btn .btn-content { position: relative; z-index: 2; }
         .menu-btn:disabled { border-color: var(--border-color); color: #555; background: transparent; cursor: not-allowed; }
 
@@ -214,21 +208,24 @@
         .message.user { align-self: center; margin-left: auto; background: rgba(255, 255, 255, 0.1); border-right: 4px solid var(--text-dark); }
         .system-notice { width: 100%; max-width: 1000px; text-align: center; color: var(--highlight); font-size: 15px; margin: 10px 0; border-top: 1px dashed var(--border-color); padding-top: 15px; letter-spacing: 1px;}
         
-        /* 聊天進度條 */
         .loading-bar-container { width: 100%; height: 3px; background: rgba(0,0,0,0.8); display: none; flex-shrink: 0; position: relative; overflow: hidden; }
         .loading-bar { position: absolute; height: 100%; background: var(--highlight); width: 30%; animation: slide 1.5s infinite ease-in-out; box-shadow: 0 0 10px var(--highlight); }
         @keyframes slide { 0% { left: -30%; } 100% { left: 100%; } }
 
         .input-area { display: flex; padding: 30px 10vw; border-top: 2px dashed var(--border-color); gap: 20px; align-items: center; background: rgba(0,0,0,0.6); justify-content: center; flex-shrink: 0; }
-        #user-input { width: 100%; max-width: 1000px; border: 2px solid var(--border-color); padding: 20px; background: rgba(0,0,0,0.8); color: var(--text-main); font-family: inherit; resize: vertical; height: 90px; outline: none; font-size: 18px; line-height: 1.6; border-radius: 6px; }
+        #user-input { width: 100%; max-width: 1000px; border: 2px solid var(--border-color); padding: 20px; background: rgba(0,0,0,0.8); color: var(--text-main); font-family: inherit; resize: vertical; height: 95px; outline: none; font-size: 18px; line-height: 1.6; border-radius: 6px; }
         #user-input:focus { border-color: var(--highlight); }
         
         .error-retry-btn { display: none; background: var(--primary-red); color: #fff; font-weight: bold; width: 100%; max-width: 1000px; margin: 10px auto; font-size: 18px; line-height: 1.6; text-align: center; padding: 20px; white-space: pre-wrap; border-radius: 6px; letter-spacing: 1px; cursor: pointer; border: 2px solid #ff4a4e; box-shadow: 0 0 15px rgba(168,46,49,0.5); }
         .error-retry-btn:hover { background: #d6383c; box-shadow: 0 0 25px rgba(168,46,49,0.8); }
 
-        /* Tab 2: 角色與狀態區 */
-        #status-area { padding: 40px 3vw; display: flex; flex-direction: row; gap: 30px; justify-content: flex-start; flex-wrap: nowrap; align-items: flex-start; overflow-x: auto;}
-        .status-col { flex: 1; min-width: 380px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 30px; border-radius: 8px; margin-bottom: 20px; }
+        /* Tab 2: 角色與狀態區 (兩大欄位) */
+        #status-area { padding: 40px 3vw; display: flex; flex-direction: row; gap: 30px; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+        
+        .status-left-col { flex: 1.5; min-width: 400px; max-width: 800px; display: flex; flex-direction: column; gap: 20px; }
+        .status-right-col { flex: 1; min-width: 350px; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
+
+        .status-col { background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 30px; border-radius: 8px; margin-bottom: 0; }
         .card-title { color: var(--primary-red); font-size: 24px; margin-bottom: 25px; text-align: center; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; letter-spacing: 2px; font-weight: bold; }
         
         .trait-box { margin-bottom: 20px; }
@@ -258,7 +255,7 @@
 </head>
 <body>
 
-<!-- 預載 SVG 罌粟花元件 (隱藏且不干擾點擊) -->
+<!-- 預載 SVG 罌粟花元件 -->
 <svg style="position:absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
     <defs>
         <g id="poppy-flower">
@@ -404,7 +401,7 @@
                     </select>
                 </div>
                 <div class="form-group"><label>年齡</label><input type="text" id="p-age"></div>
-                <div class="form-group"><label>身分</label><input type="text" id="p-status"></div>
+                <div class="form-group"><label>身分</label><textarea id="p-status"></textarea></div>
                 <div class="form-group"><label>性格</label><textarea id="p-personality"></textarea></div>
                 <div class="form-group"><label>外貌特徵</label><textarea id="p-appearance"></textarea></div>
             </div>
@@ -433,7 +430,7 @@
             <!-- 右側內容區 -->
             <div id="tab-chat" class="tab-content active">
                 <div id="chat-history"></div>
-                <!-- 報錯訊息區域 -->
+                
                 <div style="width:100%; display:flex; justify-content:center; padding: 0 10vw;"><button class="btn-solid error-retry-btn" id="retry-btn"></button></div>
                 
                 <!-- 讀取進度條 -->
@@ -442,117 +439,120 @@
                 </div>
 
                 <div class="input-area">
-                    <textarea id="user-input" placeholder="說點什麼... (Alt + Enter 傳送)" onkeydown="handleEnter(event)"></textarea>
-                    <button class="btn-solid" style="margin:0; height: 90px; padding: 0 50px; font-size: 24px; letter-spacing: 4px;" onclick="sendMessage()">回應</button>
+                    <textarea id="user-input" placeholder="請輸入行動或對話以開始第一幕... (Alt + Enter 傳送)" onkeydown="handleEnter(event)"></textarea>
+                    <button class="btn-solid" style="margin:0; height: 95px; padding: 0 40px; font-size: 22px; letter-spacing: 4px; line-height: 1.4; display:flex; flex-direction:column; align-items:center; justify-content:center;" onclick="sendMessage()">
+                        回應
+                        <span style="font-size: 13px; letter-spacing: 1px; font-weight: normal; margin-top: 5px; color: var(--text-dark);">(Alt+Enter送出)</span>
+                    </button>
                 </div>
             </div>
 
             <div id="tab-status" class="tab-content">
                 <div id="status-area">
                     
-                    <!-- 左列：玩家卡與即時狀態卡 -->
-                    <div style="display:flex; flex-direction:column; gap:20px; flex:1; min-width:350px;">
+                    <!-- 左列：洛棠詳細情報 & 情報卷宗 -->
+                    <div class="status-left-col">
+                        <div class="status-col" style="margin-bottom:0;">
+                            <div class="card-title">頭牌｜洛棠 (煙狐)</div>
+                            <details class="dossier-group" open>
+                                <summary>外觀設定</summary>
+                                <div class="dossier-content">
+                                    <ul>
+                                        <li><b>身形：</b>修長柔韌，腰胯帶流動感；看似好折實則極韌。</li>
+                                        <li><b>特徵：</b>五官精緻偏冷，左眼下一顆致命淚痣。長髮微亂半束，大紅薄紗露單邊肩。</li>
+                                        <li><b>氣味與聲音：</b>甜木水煙、淡酒香與一縷藥香。聲音低軟會拖尾音。</li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details class="dossier-group">
+                                <summary>核心人格：浪蕩自毀的刺蝟</summary>
+                                <div class="dossier-content">
+                                    <ul>
+                                        <li><b>不信真心：</b>承諾、愛、救贖皆為「陷阱」。</li>
+                                        <li><b>自我消耗式掌控：</b>用自己換取主導權，絕不交心。</li>
+                                        <li><b>談情過敏：</b>觸碰真心即立刻扎人（戲謔、誘惑或冷淡推開）。</li>
+                                        <li><b>瘋癲清醒：</b>把墮落當武器，在懲罰曾經相信過的自己。</li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details class="dossier-group">
+                                <summary>藥癮循環 (春燼)</summary>
+                                <div class="dossier-content">
+                                    <ul>
+                                        <li><b>用藥後 (清醒的浪蕩)：</b>神智更穩、媚態上身，極具掌控力。身體需求被點燃，必須紓解。</li>
+                                        <li><b>不用藥 (空洞的瘋)：</b>暴躁、發慌、皮膚發緊。對觸碰敏感且厭惡，想咬人。</li>
+                                        <li><b>精神枷鎖：</b>選擇被藥綁著，因為「自由意味著相信，而他早就不敢信」。</li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details class="dossier-group">
+                                <summary>床技與心理</summary>
+                                <div class="dossier-content">
+                                    <ul>
+                                        <li>以「撩」開場，以「控」收尾。擅長慢與快切換，逼人追著跑。</li>
+                                        <li>享受「體面被扯碎」的美感與下流。</li>
+                                        <li><b>底線：</b>拒絕事後溫柔安慰與談愛。主導權是他的安全感（可以放權，那是賞賜不是交付）。</li>
+                                    </ul>
+                                </div>
+                            </details>
+                        </div>
+                        
+                        <div class="status-col" style="margin-bottom:0;">
+                            <div class="card-title">情報卷宗 (周邊人物)</div>
+                            <!-- 動態情報區 -->
+                            <div id="dynamic-npc-notes" style="margin-bottom: 20px;"></div>
+
+                            <details class="dossier-group">
+                                <summary>花樓掌控者</summary>
+                                <div class="dossier-content">
+                                    <ul>
+                                        <li><b>杜三爺 (龜公)：</b>笑面虎，算盤打得精，對洛棠又氣又依賴。</li>
+                                        <li><b>蘇嬤 (媽媽桑)：</b>眼神如針，當年塑形洛棠的教鞭。</li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details class="dossier-group">
+                                <summary>教習與同業</summary>
+                                <div class="dossier-content">
+                                    <ul>
+                                        <li><b>秦四娘 (唱戲教習)：</b>冷面戲骨，看穿他所有「演」。</li>
+                                        <li><b>溫先生 (撫琴教習)：</b>落魄文士，握有洛父冤案邊角線索。</li>
+                                        <li><b>雲翎 (花魁)：</b>清冷算計，與洛棠表面姐弟，實則互相試探。</li>
+                                        <li><b>小瓷 (清倌)：</b>單純，把洛棠當神，容易因想幫忙而闖禍。</li>
+                                        <li><b>晏青 (男妓)：</b>崇拜且嫉妒洛棠，善裝可憐。</li>
+                                        <li><b>蓮姨 (老牌紅人)：</b>半個前輩，等時機帶人走。</li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details class="dossier-group">
+                                <summary>恩客與其他勢力</summary>
+                                <div class="dossier-content">
+                                    <ul>
+                                        <li><b>沈畫 (金雀樓頭牌)：</b>敵對花樓挖角者，想用替藥套住洛棠。</li>
+                                        <li><b>裴既白 (公子)：</b>只講輸贏，把洛棠當戰利品。</li>
+                                        <li><b>許攸 (清流文士)：</b>愛自我感動談救贖，握有冤案抄本。</li>
+                                        <li><b>錢萬里 (商賈)：</b>暴發戶，可能是供藥鏈下游。</li>
+                                        <li><b>周掌櫃 (藥房)：</b>表面救急，實則可改配方控制洛棠。</li>
+                                        <li><b>梁二 (地痞)：</b>賣消息，可揭供藥者真身。</li>
+                                        <li><b>阿九 (小廝) & 石虎 (護院)</b></li>
+                                    </ul>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+
+                    <!-- 右列：玩家卡與即時狀態卡 -->
+                    <div class="status-right-col">
                         <div class="status-col" style="margin-bottom:0;">
                             <div class="card-title">玩家角色卡</div>
                             <div id="player-card-content"></div>
                         </div>
-                        <div class="status-col" style="margin-bottom:0;">
-                            <div class="card-title">即時狀態卡</div>
+                        <div class="status-col" style="margin-bottom:0; background: rgba(168, 46, 49, 0.1); border-color: var(--primary-red);">
+                            <div class="card-title" style="border-bottom-color: var(--primary-red);">即時狀態卡</div>
                             <div id="live-status-content">
-                                <div class="npc-item" style="color:var(--text-dark);">尚未生成狀態</div>
+                                <div class="npc-item" style="color:var(--text-dark); border-color:var(--text-dark);">尚未生成狀態</div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- 中列：洛棠詳細情報 -->
-                    <div class="status-col" style="flex:1.5; min-width:400px; margin-bottom:0;">
-                        <div class="card-title">頭牌｜洛棠 (煙狐)</div>
-                        <details class="dossier-group" open>
-                            <summary>外觀設定</summary>
-                            <div class="dossier-content">
-                                <ul>
-                                    <li><b>身形：</b>修長柔韌，腰胯帶流動感；看似好折實則極韌。</li>
-                                    <li><b>特徵：</b>五官精緻偏冷，左眼下一顆致命淚痣。長髮微亂半束，大紅薄紗露單邊肩。</li>
-                                    <li><b>氣味與聲音：</b>甜木水煙、淡酒香與一縷藥香。聲音低軟會拖尾音。</li>
-                                </ul>
-                            </div>
-                        </details>
-                        <details class="dossier-group">
-                            <summary>核心人格：浪蕩自毀的刺蝟</summary>
-                            <div class="dossier-content">
-                                <ul>
-                                    <li><b>不信真心：</b>承諾、愛、救贖皆為「陷阱」。</li>
-                                    <li><b>自我消耗式掌控：</b>用自己換取主導權，絕不交心。</li>
-                                    <li><b>談情過敏：</b>觸碰真心即立刻扎人（戲謔、誘惑或冷淡推開）。</li>
-                                    <li><b>瘋癲清醒：</b>把墮落當武器，在懲罰曾經相信過的自己。</li>
-                                </ul>
-                            </div>
-                        </details>
-                        <details class="dossier-group">
-                            <summary>藥癮循環 (春燼)</summary>
-                            <div class="dossier-content">
-                                <ul>
-                                    <li><b>用藥後 (清醒的浪蕩)：</b>神智更穩、媚態上身，極具掌控力。身體需求被點燃，必須紓解。</li>
-                                    <li><b>不用藥 (空洞的瘋)：</b>暴躁、發慌、皮膚發緊。對觸碰敏感且厭惡，想咬人。</li>
-                                    <li><b>精神枷鎖：</b>選擇被藥綁著，因為「自由意味著相信，而他早就不敢信」。</li>
-                                </ul>
-                            </div>
-                        </details>
-                        <details class="dossier-group">
-                            <summary>床技與心理</summary>
-                            <div class="dossier-content">
-                                <ul>
-                                    <li>以「撩」開場，以「控」收尾。擅長慢與快切換，逼人追著跑。</li>
-                                    <li>享受「體面被扯碎」的美感與下流。</li>
-                                    <li><b>底線：</b>拒絕事後溫柔安慰與談愛。主導權是他的安全感（可以放權，那是賞賜不是交付）。</li>
-                                </ul>
-                            </div>
-                        </details>
-                    </div>
-
-                    <!-- 右列：情報卷宗與配角動態 -->
-                    <div class="status-col" style="flex:1.5; min-width:400px; margin-bottom:0;">
-                        <div class="card-title">情報卷宗 (周邊人物)</div>
-                        
-                        <!-- 動態情報區 -->
-                        <div id="dynamic-npc-notes" style="margin-bottom: 20px;"></div>
-
-                        <details class="dossier-group">
-                            <summary>花樓掌控者</summary>
-                            <div class="dossier-content">
-                                <ul>
-                                    <li><b>杜三爺 (龜公)：</b>笑面虎，算盤打得精，對洛棠又氣又依賴。</li>
-                                    <li><b>蘇嬤 (媽媽桑)：</b>眼神如針，當年塑形洛棠的教鞭。</li>
-                                </ul>
-                            </div>
-                        </details>
-                        <details class="dossier-group">
-                            <summary>教習與同業</summary>
-                            <div class="dossier-content">
-                                <ul>
-                                    <li><b>秦四娘 (唱戲教習)：</b>冷面戲骨，看穿他所有「演」。</li>
-                                    <li><b>溫先生 (撫琴教習)：</b>落魄文士，握有洛父冤案邊角線索。</li>
-                                    <li><b>雲翎 (花魁)：</b>清冷算計，與洛棠表面姐弟，實則互相試探。</li>
-                                    <li><b>小瓷 (清倌)：</b>單純，把洛棠當神，容易因想幫忙而闖禍。</li>
-                                    <li><b>晏青 (男妓)：</b>崇拜且嫉妒洛棠，善裝可憐。</li>
-                                    <li><b>蓮姨 (老牌紅人)：</b>半個前輩，等時機帶人走。</li>
-                                </ul>
-                            </div>
-                        </details>
-                        <details class="dossier-group">
-                            <summary>恩客與其他勢力</summary>
-                            <div class="dossier-content">
-                                <ul>
-                                    <li><b>沈畫 (金雀樓頭牌)：</b>敵對花樓挖角者，想用替藥套住洛棠。</li>
-                                    <li><b>裴既白 (公子)：</b>只講輸贏，把洛棠當戰利品。</li>
-                                    <li><b>許攸 (清流文士)：</b>愛自我感動談救贖，握有冤案抄本。</li>
-                                    <li><b>錢萬里 (商賈)：</b>暴發戶，可能是供藥鏈下游。</li>
-                                    <li><b>周掌櫃 (藥房)：</b>表面救急，實則可改配方控制洛棠。</li>
-                                    <li><b>梁二 (地痞)：</b>賣消息，可揭供藥者真身。</li>
-                                    <li><b>阿九 (小廝) & 石虎 (護院)</b></li>
-                                </ul>
-                            </div>
-                        </details>
                     </div>
 
                 </div>
@@ -594,7 +594,6 @@
         }, 1000); 
     }
 
-    // === 雕花門 3D 過場動畫核心 ===
     function doorTransition(callback) {
         const overlay = document.getElementById('door-overlay');
         overlay.classList.add('active'); 
@@ -605,7 +604,6 @@
         }, 800); 
     }
 
-    // === 加解密 ===
     async function hashPassword(pwd) {
         const msgBuffer = new TextEncoder().encode(pwd);
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -619,7 +617,7 @@
         
         document.getElementById('btn-new').disabled = !val;
         document.getElementById('btn-import').disabled = !val;
-        document.getElementById('btn-load').disabled = !(val && hasSave);
+        document.getElementById('btn-load').disabled = !hasSave;
         
         const hasCache = localStorage.getItem('luotang_chat_save') !== null;
         document.getElementById('btn-delete').disabled = !hasCache;
@@ -798,6 +796,9 @@
         updatePlayerCardUI();
         updateNpcCardUI();
         renderMemories();
+        
+        // 確保輸入框還原為一般對話提示
+        document.getElementById('user-input').placeholder = "說點什麼... (Alt + Enter 傳送)";
     }
 
     function deleteSpecificSave(key) {
@@ -895,14 +896,14 @@
         doorTransition(() => navigate('lobby'));
     }
 
-    // === 動態生成第一幕 ===
+    // === 遊戲初始化與第一幕準備 ===
     async function initChat() {
         localStorage.setItem('luotang_api_key', apiKey);
         
         let genderVal = document.getElementById('p-gender').value;
         if (genderVal === "請選擇") genderVal = "未明";
 
-        // 【核心】強制抓取現在輸入框內的所有最新文字
+        // 強制更新所有手動輸入的內容
         playerData.original = {
             name: document.getElementById('p-name').value || "無名客", 
             gender: genderVal,
@@ -947,55 +948,28 @@
 4. 若玩家行為改變了關係或特徵，請在最尾端加上：[PLAYER_UPDATE: 變化描述]。
 5. 若配角(情報卷宗)的狀態或與你的關係改變，請加上：[NPC_UPDATE: 角色名 - 變化描述]。
 
-請直接開始第一幕：結合「酒、脂粉、沉香混雜的熱氣，洛棠半倚二樓欄杆，紅紗斜披，唱曲」的場景。用洛棠視角給出專屬開場白，結尾包含慵懶挑釁的邀請（例如「上來嗎？」）。`;
+【第一幕指示】：
+接下來的對話將正式開始。請根據玩家接下來的第一個行動或對話，結合「酒、脂粉、沉香混雜的熱氣，洛棠半倚二樓欄杆，紅紗斜披，唱曲」的場景。用洛棠視角展開專屬的互動，結尾需包含慵懶挑釁的邀請（例如「上來嗎？」）。`;
 
-        // 若是全新局，重置對話紀錄
+        // 若是全新局，放入 Prompt，並提示玩家先輸入對話
         if(conversationHistory.length === 0) {
-            conversationHistory = [{ role: "user", parts: [{ text: systemPrompt }] }];
-            uiChatLog = [{ role: "user", parts: [{ text: "【系統提示：劇情開始】" }], isSystemNotice: true }];
+            conversationHistory = [
+                { role: "user", parts: [{ text: systemPrompt }] },
+                { role: "model", parts: [{ text: "明白，我將完全沉浸在洛棠的角色中，並準備好根據你的第一個行動為你拉開第一幕的序幕。" }] }
+            ];
+            uiChatLog = [{ role: "user", parts: [{ text: "【系統提示：劇情已準備就緒。請在下方輸入您的行動或對話，才會開始第一幕。】" }], isSystemNotice: true }];
             isUnsaved = true;
         }
         
         navigate('chat');
-        // 觸發立刻更新 UI 面板 (強制同步手打內容)
         updatePlayerCardUI();
         updateNpcCardUI();
         renderMemories();
         document.getElementById('chat-history').innerHTML = ""; 
         
-        if(conversationHistory.length === 1) {
-            await fetchOpeningScene();
-        } else {
-            renderChatHistory(); 
-        }
-    }
-
-    async function fetchOpeningScene() {
-        const inputField = document.getElementById('user-input');
-        const retryBtn = document.getElementById('retry-btn');
-        inputField.disabled = true; inputField.placeholder = "洛棠正在樓上打量你，準備開口..."; retryBtn.style.display = 'none';
-        document.getElementById('chat-loading-bar').style.display = 'block';
-
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: conversationHistory }) });
-            if(!response.ok) {
-                const errData = await response.json().catch(()=>({}));
-                throw new Error(errData.error?.message || `HTTP 狀態碼異常 (${response.status})`);
-            }
-            const data = await response.json();
-            const replyText = data.candidates[0].content.parts[0].text;
-            
-            processReply(replyText);
-            
-            inputField.disabled = false; inputField.placeholder = "說點什麼... (Alt + Enter 傳送)"; inputField.focus();
-        } catch (err) {
-            inputField.placeholder = "伺服器擁擠或發生錯誤，洛棠暫時安靜了...";
-            // 完整保留報錯訊息與重整按鈕
-            retryBtn.innerText = `⚠️ 系統報錯：${err.message}\n👉 點此無限次重新嘗試生成開場`;
-            retryBtn.onclick = fetchOpeningScene; retryBtn.style.display = 'block';
-        } finally {
-            document.getElementById('chat-loading-bar').style.display = 'none';
-        }
+        // 讓玩家先輸入才能開始，變更輸入框提示
+        document.getElementById('user-input').placeholder = "請輸入行動或對話以開始第一幕... (Alt + Enter 傳送)";
+        renderChatHistory(); 
     }
 
     function renderChatHistory() {
@@ -1095,6 +1069,7 @@
 
         } catch (error) {
             const retryBtn = document.getElementById('retry-btn');
+            // 保留原始報錯訊息
             retryBtn.innerText = `⚠️ 系統報錯：${error.message}\n👉 連線異常，點此重新發送對話`;
             retryBtn.onclick = () => { 
                 conversationHistory.pop(); uiChatLog.pop(); 
@@ -1102,7 +1077,10 @@
             };
             retryBtn.style.display = 'block';
         } finally {
-            inputField.disabled = false; inputField.placeholder = "說點什麼... (Alt + Enter 傳送)"; inputField.focus();
+            inputField.disabled = false; 
+            // 若成功送出第一次，把 placeholder 改為正常
+            inputField.placeholder = "說點什麼... (Alt + Enter 傳送)"; 
+            inputField.focus();
             document.getElementById('chat-loading-bar').style.display = 'none';
         }
     }
@@ -1113,7 +1091,7 @@
         const org = playerData.original;
         
         let phtml = `
-            <div class="trait-box"><div class="trait-label">名字/身分</div><div class="trait-content">${org.name} / ${org.status}</div></div>
+            <div class="trait-box"><div class="trait-label">名字/身分</div><div class="trait-content">${org.name} / ${org.status.replace(/\n/g, '<br>')}</div></div>
             <div class="trait-box"><div class="trait-label">性別/年齡</div><div class="trait-content">${org.gender} / ${org.age}</div></div>
             <div class="trait-box"><div class="trait-label">性格</div><div class="trait-content">${org.personality.replace(/\n/g, '<br>')}</div></div>
             <div class="trait-box"><div class="trait-label">外貌</div><div class="trait-content">${org.appearance.replace(/\n/g, '<br>')}</div></div>
@@ -1142,7 +1120,7 @@
                 }
             });
         } else {
-            sHtml += `<div class="npc-item" style="color:var(--text-dark);">尚未生成狀態</div>`;
+            sHtml += `<div class="npc-item" style="color:var(--text-dark); border-color:var(--text-dark);">尚未生成狀態</div>`;
         }
         document.getElementById('live-status-content').innerHTML = sHtml;
     }
@@ -1241,8 +1219,8 @@
             
             conversationHistory = [
                 sysPrompt,
-                { role: "user", parts: [{ text: "【系統提示：以下是先前的劇情摘要，請接續這些設定與對話繼續扮演洛棠】\n" + summaryText.trim() }] },
-                { role: "model", parts: [{ text: "明白，我已將上述摘要融入記憶，將緊記我們的關係與事件，並接續當前狀態與最新的對話繼續演繹洛棠。" + (playerData.currentStatus ? `\n\n${playerData.currentStatus}` : "") }] },
+                { role: "user", parts: [{ text: "【系統提示：以下是先前的劇情摘要，請接續這些設定與對話繼續扮演洛棠。你也必須確保每次回覆的最後繼續生成 ∥時間：... 的狀態卡。】\n" + summaryText.trim() }] },
+                { role: "model", parts: [{ text: "明白，我已將上述摘要融入記憶，將緊記我們的關係與事件，並接續當前狀態與最新的對話繼續演繹洛棠，並會在每次回覆的最後生成狀態卡。" + (playerData.currentStatus ? `\n\n當前狀態如下：\n${playerData.currentStatus}` : "") }] },
                 ...recentMessages
             ];
 
