@@ -119,13 +119,16 @@
         #watermark-btn:hover { transform: rotate(90deg); filter: brightness(3) drop-shadow(0 0 15px #fff); }
         .lobby-title { font-size: 48px; color: var(--primary-red); margin-bottom: 50px; letter-spacing: 15px; font-weight: bold; text-shadow: 0 0 10px rgba(168, 46, 49, 0.5); }
         
-        .api-input-box { margin-bottom: 40px; width: 100%; max-width: 500px; text-align: center; }
+        .api-input-box { margin-bottom: 50px; width: 100%; max-width: 500px; text-align: center; }
         .api-input-box input { width: 100%; background: rgba(0,0,0,0.7); border: 2px solid var(--border-color); color: #fff; padding: 18px; font-family: inherit; font-size: 18px; outline: none; text-align: center; border-radius: 6px; font-weight: bold; transition: border-color 0.3s; }
         .api-input-box input:focus { border-color: var(--primary-red); }
         
         .unlock-status { color: #ff6b81; font-size: 16px; margin-top: 15px; height: 20px; font-weight: bold; letter-spacing: 1px; transition: color 0.3s; }
 
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        /* 上一下二 按鈕佈局 */
+        .menu-container { display: flex; flex-direction: column; gap: 30px; align-items: center; width: 100%; }
+        .menu-row-1 { display: flex; justify-content: center; width: 100%; }
+        .menu-row-2 { display: flex; gap: 30px; justify-content: center; width: 100%; flex-wrap: wrap; }
         
         /* 紗簾按鈕特效 */
         .menu-btn { 
@@ -219,13 +222,9 @@
         .error-retry-btn { display: none; background: var(--primary-red); color: #fff; font-weight: bold; width: 100%; max-width: 1000px; margin: 10px auto; font-size: 18px; line-height: 1.6; text-align: center; padding: 20px; white-space: pre-wrap; border-radius: 6px; letter-spacing: 1px; cursor: pointer; border: 2px solid #ff4a4e; box-shadow: 0 0 15px rgba(168,46,49,0.5); }
         .error-retry-btn:hover { background: #d6383c; box-shadow: 0 0 25px rgba(168,46,49,0.8); }
 
-        /* Tab 2: 角色與狀態區 (兩大欄位) */
-        #status-area { padding: 40px 3vw; display: flex; flex-direction: row; gap: 30px; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
-        
-        .status-left-col { flex: 1.5; min-width: 400px; max-width: 800px; display: flex; flex-direction: column; gap: 20px; }
-        .status-right-col { flex: 1; min-width: 350px; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
-
-        .status-col { background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 30px; border-radius: 8px; margin-bottom: 0; }
+        /* Tab 2: 角色與狀態區 */
+        #status-area { padding: 40px 3vw; display: flex; flex-direction: row; gap: 30px; justify-content: flex-start; flex-wrap: nowrap; align-items: flex-start; overflow-x: auto;}
+        .status-col { flex: 1; min-width: 380px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 30px; border-radius: 8px; margin-bottom: 20px; }
         .card-title { color: var(--primary-red); font-size: 24px; margin-bottom: 25px; text-align: center; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; letter-spacing: 2px; font-weight: bold; }
         
         .trait-box { margin-bottom: 20px; }
@@ -309,20 +308,21 @@
             <div id="unlock-status" class="unlock-status">🔒 尚未輸入 API 金鑰，大廳鎖定中</div>
         </div>
 
-        <div class="menu-grid">
-            <button class="menu-btn" id="btn-new" disabled onclick="doorTransition(() => navigate('char-creation'))">
-                <div class="btn-content">新面孔<br><span style="font-size:15px; font-weight:normal;">(新建檔)</span></div>
-            </button>
-            <button class="menu-btn" id="btn-load" disabled onclick="doorTransition(() => navigate('save-manager'))">
-                <div class="btn-content">舊相識<br><span style="font-size:15px; font-weight:normal;">(存檔閣)</span></div>
-            </button>
-            <button class="menu-btn" id="btn-import" disabled onclick="document.getElementById('import-save-file').click()">
-                <div class="btn-content">實體紀錄<br><span style="font-size:15px; font-weight:normal;">(匯入存檔)</span></div>
-            </button>
-            <input type="file" id="import-save-file" accept=".json" style="display:none" onchange="importSave(event)">
-            <button class="menu-btn" id="btn-delete" disabled onclick="deleteSaveLobby()">
-                <div class="btn-content">抹除痕跡<br><span style="font-size:15px; font-weight:normal;">(清空快取)</span></div>
-            </button>
+        <div class="menu-container">
+            <div class="menu-row-1">
+                <button class="menu-btn" id="btn-new" disabled onclick="doorTransition(() => navigate('char-creation'))">
+                    <div class="btn-content">新面孔<br><span style="font-size:15px; font-weight:normal;">(新建檔)</span></div>
+                </button>
+            </div>
+            <div class="menu-row-2">
+                <button class="menu-btn" id="btn-load" disabled onclick="doorTransition(() => navigate('save-manager'))">
+                    <div class="btn-content">舊相識<br><span style="font-size:15px; font-weight:normal;">(存檔閣)</span></div>
+                </button>
+                <button class="menu-btn" id="btn-import" disabled onclick="document.getElementById('import-save-file').click()">
+                    <div class="btn-content">實體紀錄<br><span style="font-size:15px; font-weight:normal;">(匯入存檔)</span></div>
+                </button>
+                <input type="file" id="import-save-file" accept=".json" style="display:none" onchange="importSave(event)">
+            </div>
         </div>
     </div>
 
@@ -580,11 +580,16 @@
 
     // === 開場動畫 ===
     window.onload = () => {
-        migrateOldSave(); 
+        // 在頁面載入時強制清空所有以前的快取(移除網頁快取設定)
+        localStorage.removeItem('luotang_chat_save');
+        localStorage.removeItem('luotang_ui_log');
+        localStorage.removeItem('luotang_player_data');
+
         introTimer = setTimeout(() => { skipIntro(); }, 7500); 
         const savedKey = localStorage.getItem('luotang_api_key');
         if (savedKey) { document.getElementById('lobby-api-key').value = savedKey; checkApiKey(); }
     };
+
     function skipIntro() {
         clearTimeout(introTimer);
         document.getElementById('intro-anim').style.opacity = '0';
@@ -619,9 +624,6 @@
         document.getElementById('btn-import').disabled = !val;
         document.getElementById('btn-load').disabled = !hasSave;
         
-        const hasCache = localStorage.getItem('luotang_chat_save') !== null;
-        document.getElementById('btn-delete').disabled = !hasCache;
-        
         const statusText = document.getElementById('unlock-status');
         if(val) {
             statusText.innerText = "🔓 金鑰已確認，大廳已解鎖";
@@ -631,18 +633,6 @@
             statusText.style.color = "#ff6b81";
         }
         apiKey = val;
-    }
-
-    function migrateOldSave() {
-        const oldHistory = localStorage.getItem('luotang_chat_save');
-        const oldPlayer = localStorage.getItem('luotang_player_data');
-        if (oldHistory && oldPlayer) {
-            let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
-            if (!saves['舊版自動存檔']) {
-                saves['舊版自動存檔'] = { history: JSON.parse(oldHistory), player: JSON.parse(oldPlayer), time: "已遷移的舊紀錄" };
-                localStorage.setItem('luotang_saves', JSON.stringify(saves));
-            }
-        }
     }
 
     function navigate(screenId) {
@@ -769,10 +759,6 @@
         let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
         saves[name] = { history: conversationHistory, uiLog: uiChatLog, player: playerData, time: new Date().toLocaleString() };
         localStorage.setItem('luotang_saves', JSON.stringify(saves));
-        
-        localStorage.setItem('luotang_chat_save', JSON.stringify(conversationHistory));
-        localStorage.setItem('luotang_ui_log', JSON.stringify(uiChatLog));
-        localStorage.setItem('luotang_player_data', JSON.stringify(playerData));
         isUnsaved = false;
         alert(`💾 存檔 [${name}] 已成功保存至存檔閣。`);
         checkApiKey();
@@ -797,7 +783,6 @@
         updateNpcCardUI();
         renderMemories();
         
-        // 確保輸入框還原為一般對話提示
         document.getElementById('user-input').placeholder = "說點什麼... (Alt + Enter 傳送)";
     }
 
@@ -808,15 +793,6 @@
             localStorage.setItem('luotang_saves', JSON.stringify(saves));
             renderSaveManager();
             checkApiKey();
-        }
-    }
-
-    function deleteSaveLobby() {
-        if(confirm("確定要抹除目前遊玩中的瀏覽器快取嗎？（已存入存檔閣的紀錄不會消失）")) {
-            localStorage.removeItem('luotang_chat_save');
-            localStorage.removeItem('luotang_ui_log');
-            localStorage.removeItem('luotang_player_data');
-            checkApiKey(); alert("目前遊玩快取已抹除。");
         }
     }
 
@@ -903,7 +879,6 @@
         let genderVal = document.getElementById('p-gender').value;
         if (genderVal === "請選擇") genderVal = "未明";
 
-        // 強制更新所有手動輸入的內容
         playerData.original = {
             name: document.getElementById('p-name').value || "無名客", 
             gender: genderVal,
@@ -951,7 +926,6 @@
 【第一幕指示】：
 接下來的對話將正式開始。請根據玩家接下來的第一個行動或對話，結合「酒、脂粉、沉香混雜的熱氣，洛棠半倚二樓欄杆，紅紗斜披，唱曲」的場景。用洛棠視角展開專屬的互動，結尾需包含慵懶挑釁的邀請（例如「上來嗎？」）。`;
 
-        // 若是全新局，放入 Prompt，並提示玩家先輸入對話
         if(conversationHistory.length === 0) {
             conversationHistory = [
                 { role: "user", parts: [{ text: systemPrompt }] },
@@ -966,9 +940,8 @@
         updateNpcCardUI();
         renderMemories();
         document.getElementById('chat-history').innerHTML = ""; 
-        
-        // 讓玩家先輸入才能開始，變更輸入框提示
         document.getElementById('user-input').placeholder = "請輸入行動或對話以開始第一幕... (Alt + Enter 傳送)";
+        
         renderChatHistory(); 
     }
 
@@ -1069,7 +1042,6 @@
 
         } catch (error) {
             const retryBtn = document.getElementById('retry-btn');
-            // 保留原始報錯訊息
             retryBtn.innerText = `⚠️ 系統報錯：${error.message}\n👉 連線異常，點此重新發送對話`;
             retryBtn.onclick = () => { 
                 conversationHistory.pop(); uiChatLog.pop(); 
@@ -1078,7 +1050,6 @@
             retryBtn.style.display = 'block';
         } finally {
             inputField.disabled = false; 
-            // 若成功送出第一次，把 placeholder 改為正常
             inputField.placeholder = "說點什麼... (Alt + Enter 傳送)"; 
             inputField.focus();
             document.getElementById('chat-loading-bar').style.display = 'none';
@@ -1091,8 +1062,9 @@
         const org = playerData.original;
         
         let phtml = `
-            <div class="trait-box"><div class="trait-label">名字/身分</div><div class="trait-content">${org.name} / ${org.status.replace(/\n/g, '<br>')}</div></div>
+            <div class="trait-box"><div class="trait-label">名字</div><div class="trait-content">${org.name}</div></div>
             <div class="trait-box"><div class="trait-label">性別/年齡</div><div class="trait-content">${org.gender} / ${org.age}</div></div>
+            <div class="trait-box"><div class="trait-label">身分</div><div class="trait-content">${org.status.replace(/\n/g, '<br>')}</div></div>
             <div class="trait-box"><div class="trait-label">性格</div><div class="trait-content">${org.personality.replace(/\n/g, '<br>')}</div></div>
             <div class="trait-box"><div class="trait-label">外貌</div><div class="trait-content">${org.appearance.replace(/\n/g, '<br>')}</div></div>
         `;
