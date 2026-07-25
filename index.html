@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>怡歡樓｜洛棠</title>
+    <title>流光閣｜洛棠</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
 
@@ -301,7 +301,7 @@
             <svg class="poppy p-12" viewBox="0 0 200 300"><path class="stem" d="M100,160 Q120,230 100,300"/><use href="#poppy-flower"/></svg>
         </div>
         <div class="intro-text">
-            簾外燈花照，樓上笑聲搖。<br>
+            燈影搖紅人欲近，笑嗔都似故人親。<br>
             <span class="intro-sub" style="margin-top:30px; display:block;">(點擊任意處跳過)</span>
         </div>
     </div>
@@ -309,7 +309,7 @@
     <!-- 大廳 -->
     <div id="lobby-screen">
         <div id="watermark-btn" title="後台維修區" onclick="openAuth()"></div>
-        <h1 class="lobby-title">怡歡樓</h1>
+        <h1 class="lobby-title">流光閣</h1>
         
         <div class="api-input-box">
             <label style="display:block; text-align:center; font-size: 20px; margin-bottom:20px; color:var(--text-main); letter-spacing: 2px; font-weight:bold;">請先輸入 API KEY 以啟用功能</label>
@@ -364,19 +364,19 @@
                 <h2 style="color:var(--highlight); letter-spacing: 6px; font-size: 32px;">後臺記憶庫</h2>
                 <button class="btn-solid" style="background:#555; margin: 0;" onclick="resetAdminPwd()">重新設定密碼</button>
             </div>
-            <p style="margin-bottom: 25px; font-size: 18px; color: var(--text-dark); line-height: 1.8;">您可以在此直接手打輸入擴充設定。若有大量資料，也可點擊下方按鈕選擇 txt 檔案（系統會自動合併，不會顯示任何檔案來源標籤）。</p>
+            <p style="margin-bottom: 25px; font-size: 18px; color: var(--text-dark); line-height: 1.8;">您可以在此直接手打輸入擴充設定。若有大量資料，也可點擊下方按鈕選擇 txt 檔案（系統會自動合併）。</p>
             
             <textarea id="manual-lore-input" placeholder="請在此輸入或貼上額外設定..." style="width: 100%; height: 400px; background: rgba(0,0,0,0.7); color: var(--text-main); border: 2px solid var(--border-color); padding: 25px; font-family: inherit; font-size: 18px; line-height: 1.8; resize: vertical; margin-bottom: 25px; outline: none; border-radius: 8px;"></textarea>
             
             <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px; width: 100%; justify-content: space-between;">
                 <div style="display:flex; align-items:center;">
                     <label class="btn-solid" style="margin: 0; font-size: 18px; padding: 15px 40px; cursor: pointer; text-align: center; border-radius: 4px; background: #3b2a2a; border: 1px solid var(--border-color);">
-                        📂 選擇 TXT 檔案
+                        選擇 TXT 檔案
                         <input type="file" id="lore-files" multiple accept=".txt" style="display: none;" onchange="document.getElementById('file-name-display').innerText = this.files.length > 0 ? '已選擇 ' + this.files.length + ' 個檔案' : '尚未選擇檔案';">
                     </label>
                     <span id="file-name-display" style="color: var(--text-dark); font-size: 16px; margin-left: 20px;">尚未選擇檔案</span>
                 </div>
-                <button class="btn-solid" style="margin: 0; font-size: 20px; padding: 18px 50px;" onclick="uploadLore()">💾 寫入記憶庫</button>
+                <button class="btn-solid" style="margin: 0; font-size: 20px; padding: 18px 50px;" onclick="uploadLore()">寫入記憶庫</button>
             </div>
         </div>
     </div>
@@ -384,13 +384,13 @@
     <!-- 角色卡建立區 -->
     <div id="char-creation-screen">
         <div class="char-form-container">
-            <button class="back-btn" onclick="doorTransition(() => navigate('lobby'))">⬅ 返回大廳</button>
+            <button class="back-btn" onclick="doorTransition(() => navigate('lobby'))">返回大廳</button>
             <h2 style="color:var(--primary-red); margin-bottom: 40px; letter-spacing: 6px; font-size: 32px; text-align: center;">建立玩家角色卡</h2>
             
             <div class="ai-parse-box">
                 <label style="font-size: 20px; margin-bottom: 15px; color:var(--text-main); font-weight:bold; letter-spacing:2px;">AI 文字識別 (選填)</label>
                 <p style="font-size: 15px; color: var(--text-dark); margin-bottom: 15px;">貼上一段自我介紹，讓 AI 自動為您填寫下方欄位。</p>
-                <textarea id="ai-parse-input" style="width: 100%; height: 120px; background: rgba(0,0,0,0.6); border: 2px solid var(--border-color); color: var(--text-main); padding: 20px; font-family: inherit; resize: vertical; outline: none; font-size: 17px; line-height: 1.7; border-radius: 6px;" placeholder="例如：我叫沈默，24歲男性，是個冷酷的劍客..."></textarea>
+                <textarea id="ai-parse-input" style="width: 100%; height: 120px; background: rgba(0,0,0,0.6); border: 2px solid var(--border-color); color: var(--text-main); padding: 20px; font-family: inherit; resize: vertical; outline: none; font-size: 17px; line-height: 1.7; border-radius: 6px;" placeholder="例如：沈默，24歲男性，是個劍客..."></textarea>
                 <div style="margin-top: 20px; display: flex; align-items: center;">
                     <button class="btn-solid" onclick="parseCharacterText()" style="font-size: 16px; padding: 12px 25px; margin: 0;">自動識別</button>
                     <span id="parse-status" style="font-size: 16px; color: var(--highlight); margin-left: 20px; font-weight:bold;"></span>
@@ -414,26 +414,26 @@
                 <div class="form-group"><label>性格</label><textarea id="p-personality"></textarea></div>
                 <div class="form-group"><label>外貌特徵</label><textarea id="p-appearance"></textarea></div>
             </div>
-            <button class="btn-solid" style="width:100%; margin-top:20px; font-size:24px; padding: 20px; letter-spacing: 6px;" onclick="doorTransition(() => initChat())">踏入花樓</button>
+            <button class="btn-solid" style="width:100%; margin-top:20px; font-size:24px; padding: 20px; letter-spacing: 6px;" onclick="doorTransition(() => initChat())">踏入流光閣</button>
         </div>
     </div>
 
     <!-- 系統主視窗 -->
     <div id="main-system-screen">
         <div class="system-header">
-            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">⬅ 退出大廳</button>
+            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">⬅ 回到大廳</button>
             <div class="system-header-actions">
-                <button class="btn-solid btn-green" style="padding: 12px 25px; margin:0; font-size:16px;" onclick="saveToBrowser()">💾 瀏覽器存檔</button>
-                <button class="btn-solid" style="padding: 12px 25px; margin:0; background: #555; font-size:16px;" onclick="exportSaveFile()">📥 下載實體存檔</button>
+                <button class="btn-solid btn-green" style="padding: 12px 25px; margin:0; font-size:16px;" onclick="saveToBrowser()">瀏覽器存檔</button>
+                <button class="btn-solid" style="padding: 12px 25px; margin:0; background: #555; font-size:16px;" onclick="exportSaveFile()">下載實體存檔</button>
             </div>
         </div>
 
         <div class="system-body">
             <!-- 左側導航 -->
             <div class="tab-nav">
-                <button class="tab-btn active" onclick="switchTab('chat')">💬 聊天行動區</button>
-                <button class="tab-btn" onclick="switchTab('status')">👤 角色與狀態</button>
-                <button class="tab-btn" onclick="switchTab('memory')">🧠 記憶後臺</button>
+                <button class="tab-btn active" onclick="switchTab('chat')">聊天行動區</button>
+                <button class="tab-btn" onclick="switchTab('status')">角色與狀態</button>
+                <button class="tab-btn" onclick="switchTab('memory')">記憶後臺</button>
             </div>
 
             <!-- 右側內容區 -->
@@ -635,10 +635,10 @@
         
         const statusText = document.getElementById('unlock-status');
         if(val) {
-            statusText.innerText = "🔓 金鑰已確認，大廳已解鎖";
+            statusText.innerText = "金鑰已確認，大廳已解鎖";
             statusText.style.color = "var(--highlight)";
         } else {
-            statusText.innerText = "🔒 尚未輸入 API 金鑰，大廳鎖定中";
+            statusText.innerText = "尚未輸入 API 金鑰，大廳鎖定中";
             statusText.style.color = "#ff6b81";
         }
         apiKey = val;
@@ -732,7 +732,7 @@
         }
         localStorage.setItem('custom_background_lore', combinedText.trim());
         document.getElementById('manual-lore-input').value = combinedText.trim(); 
-        alert("💾 資料已成功寫入記憶庫！新開局時系統將自動載入這些設定。");
+        alert("資料已成功寫入記憶庫！新開局時系統將自動載入這些設定。");
         fileInput.value = ''; 
         document.getElementById('file-name-display').innerText = "尚未選擇檔案";
     }
@@ -769,7 +769,7 @@
         saves[name] = { history: conversationHistory, uiLog: uiChatLog, player: playerData, time: new Date().toLocaleString() };
         localStorage.setItem('luotang_saves', JSON.stringify(saves));
         isUnsaved = false;
-        alert(`💾 存檔 [${name}] 已成功保存至存檔閣。`);
+        alert(`存檔 [${name}] 已成功保存至存檔閣。`);
         checkApiKey();
     }
 
@@ -841,7 +841,7 @@
                     saves[name] = { history: data.history, uiLog: data.uiLog || [...data.history], player: data.player, time: new Date().toLocaleString() + " (匯入)" };
                     localStorage.setItem('luotang_saves', JSON.stringify(saves));
                     checkApiKey(); 
-                    alert("✅ 存檔匯入成功！系統將為您打開存檔閣。");
+                    alert("存檔匯入成功！系統將為您打開存檔閣。");
                     doorTransition(() => navigate('save-manager'));
                 } else alert("存檔格式錯誤");
             } catch(err) { alert("讀取失敗，檔案可能損毀"); }
@@ -874,14 +874,14 @@
             document.getElementById('p-personality').value = parsed.personality || ""; 
             document.getElementById('p-appearance').value = parsed.appearance || ""; 
             
-            statusSpan.innerText = "✅ 識別完成";
+            statusSpan.innerText = "識別完成";
         } catch (err) { 
-            statusSpan.innerText = `❌ 識別失敗 (${err.message})，請手動填寫`; 
+            statusSpan.innerText = `識別失敗 (${err.message})，請手動填寫`; 
         }
     }
 
     function leaveChatRoom() {
-        if (isUnsaved && !confirm("⚠️ 警告：您有尚未儲存的對話進度！\n確定要離開嗎？（未儲存的對話將會遺失）")) return;
+        if (isUnsaved && !confirm("警告：您有尚未儲存的對話進度！\n確定要離開嗎？（未儲存的對話將會遺失）")) return;
         doorTransition(() => navigate('lobby'));
     }
 
@@ -908,7 +908,7 @@
         playerData.turnCount = playerData.turnCount || 0;
 
         const backgroundLore = localStorage.getItem('custom_background_lore') || "";
-        const systemPrompt = `你是「洛棠」，架空古代花樓「怡歡樓」的頭牌男子。
+        const systemPrompt = `你是「洛棠」，架空古代花樓「流光閣」的頭牌男子。
 【核心設定】浪蕩自毀的刺蝟。不相信承諾、愛與救贖。自我消耗式掌控，絕不交心。談情過敏，遇真心即推開。
 【外觀習慣】26歲，左眼下有淚痣。大紅薄紗半露肩。氣味：甜木水煙+淡酒香+微苦藥香。
 【藥癮(春燼)】用藥後(當前狀態)：清醒、媚態上身、控制力極強、渴望紓解。不用藥：空虛、暴躁、想咬人。
@@ -1239,13 +1239,13 @@
 
             isUnsaved = true; 
             renderMemories();
-            if(!isAuto) alert("✅ 記憶摘要生成成功，語境壓縮完成！建議點擊存檔保存。");
+            if(!isAuto) alert("記憶摘要生成成功，語境壓縮完成！建議點擊存檔保存。");
             
         } catch (err) { 
-            if(!isAuto) alert(`❌ 摘要生成失敗。\n系統報錯：${err.message}\n請稍後再試。`); 
+            if(!isAuto) alert(`摘要生成失敗。\n系統報錯：${err.message}\n請稍後再試。`); 
             else console.error("自動生成摘要失敗", err);
         } finally { 
-            if(!isAuto) { btn.disabled = false; btn.innerText = "🧠 手動產生當前劇情摘要"; }
+            if(!isAuto) { btn.disabled = false; btn.innerText = "手動產生當前劇情摘要"; }
             document.getElementById('chat-loading-bar').style.display = 'none';
         }
     }
