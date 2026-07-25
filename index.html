@@ -119,7 +119,7 @@
         #watermark-btn:hover { transform: rotate(90deg); filter: brightness(3) drop-shadow(0 0 15px #fff); }
         .lobby-title { font-size: 48px; color: var(--primary-red); margin-bottom: 50px; letter-spacing: 15px; font-weight: bold; text-shadow: 0 0 10px rgba(168, 46, 49, 0.5); }
         
-        .api-input-box { margin-bottom: 50px; width: 100%; max-width: 500px; text-align: center; }
+        .api-input-box { margin-bottom: 40px; width: 100%; max-width: 500px; text-align: center; }
         .api-input-box input { width: 100%; background: rgba(0,0,0,0.7); border: 2px solid var(--border-color); color: #fff; padding: 18px; font-family: inherit; font-size: 18px; outline: none; text-align: center; border-radius: 6px; font-weight: bold; transition: border-color 0.3s; }
         .api-input-box input:focus { border-color: var(--primary-red); }
         
@@ -222,9 +222,13 @@
         .error-retry-btn { display: none; background: var(--primary-red); color: #fff; font-weight: bold; width: 100%; max-width: 1000px; margin: 10px auto; font-size: 18px; line-height: 1.6; text-align: center; padding: 20px; white-space: pre-wrap; border-radius: 6px; letter-spacing: 1px; cursor: pointer; border: 2px solid #ff4a4e; box-shadow: 0 0 15px rgba(168,46,49,0.5); }
         .error-retry-btn:hover { background: #d6383c; box-shadow: 0 0 25px rgba(168,46,49,0.8); }
 
-        /* Tab 2: 角色與狀態區 */
-        #status-area { padding: 40px 3vw; display: flex; flex-direction: row; gap: 30px; justify-content: flex-start; flex-wrap: nowrap; align-items: flex-start; overflow-x: auto;}
-        .status-col { flex: 1; min-width: 380px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 30px; border-radius: 8px; margin-bottom: 20px; }
+        /* Tab 2: 角色與狀態區 (兩大欄位) */
+        #status-area { padding: 40px 3vw; display: flex; flex-direction: row; gap: 40px; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+        
+        .status-left-col { flex: 1.5; min-width: 400px; max-width: 800px; display: flex; flex-direction: column; gap: 20px; }
+        .status-right-col { flex: 1; min-width: 350px; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
+
+        .status-col { background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 30px; border-radius: 8px; margin-bottom: 0; }
         .card-title { color: var(--primary-red); font-size: 24px; margin-bottom: 25px; text-align: center; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; letter-spacing: 2px; font-weight: bold; }
         
         .trait-box { margin-bottom: 20px; }
@@ -232,6 +236,13 @@
         .trait-content { font-size: 16px; line-height: 1.8; color: var(--text-main); }
         .dynamic-update { border-top: 2px dotted var(--primary-red); margin-top: 25px; padding-top: 20px; color: #ffb6c1; }
         .npc-item { margin-bottom: 12px; border-left: 3px solid var(--text-dark); padding-left: 12px; line-height: 1.6; font-size: 16px; }
+
+        /* 歷史狀態卡卡片設計 */
+        .history-status-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 15px; border-radius: 6px; margin-bottom: 15px; transition: border-color 0.3s; }
+        .history-status-card:hover { border-color: var(--highlight); }
+        .status-header-tag { font-size: 13px; font-weight: bold; margin-bottom: 10px; letter-spacing: 1px; }
+        .status-header-new { color: var(--primary-red); }
+        .status-header-old { color: var(--text-dark); }
 
         /* 手風琴摺疊面板 */
         details.dossier-group { margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(0,0,0,0.3); overflow: hidden; }
@@ -254,7 +265,6 @@
 </head>
 <body>
 
-<!-- 預載 SVG 罌粟花元件 -->
 <svg style="position:absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
     <defs>
         <g id="poppy-flower">
@@ -267,7 +277,6 @@
     </defs>
 </svg>
 
-<!-- 雕花門過場層 -->
 <div id="door-overlay">
     <div class="door door-left"></div>
     <div class="door door-right"></div>
@@ -275,7 +284,7 @@
 
 <div class="container">
     
-    <!-- 1. 開場動畫與線條罌粟花海 -->
+    <!-- 開場動畫 -->
     <div id="intro-anim" onclick="skipIntro()">
         <div class="poppy-sea">
             <svg class="poppy p-1" viewBox="0 0 200 300"><path class="stem" d="M100,160 Q80,230 100,300"/><use href="#poppy-flower"/></svg>
@@ -541,7 +550,7 @@
                         </div>
                     </div>
 
-                    <!-- 右列：玩家卡與即時狀態卡 -->
+                    <!-- 右列：玩家卡與即時狀態卡 (歷史堆疊式) -->
                     <div class="status-right-col">
                         <div class="status-col" style="margin-bottom:0;">
                             <div class="card-title">玩家角色卡</div>
@@ -549,7 +558,7 @@
                         </div>
                         <div class="status-col" style="margin-bottom:0; background: rgba(168, 46, 49, 0.1); border-color: var(--primary-red);">
                             <div class="card-title" style="border-bottom-color: var(--primary-red);">即時狀態卡</div>
-                            <div id="live-status-content">
+                            <div id="live-status-content" style="display:flex; flex-direction:column; gap:15px;">
                                 <div class="npc-item" style="color:var(--text-dark); border-color:var(--text-dark);">尚未生成狀態</div>
                             </div>
                         </div>
@@ -580,7 +589,7 @@
 
     // === 開場動畫 ===
     window.onload = () => {
-        // 在頁面載入時強制清空所有以前的快取(移除網頁快取設定)
+        // 在頁面載入時強制清空所有以前的快取
         localStorage.removeItem('luotang_chat_save');
         localStorage.removeItem('luotang_ui_log');
         localStorage.removeItem('luotang_player_data');
@@ -774,7 +783,14 @@
         playerData = saves[key].player;
         if (!playerData.memories) playerData.memories = [];
         if (!playerData.npc_notes) playerData.npc_notes = [];
+        if (!playerData.statusHistory) playerData.statusHistory = [];
         if (!playerData.turnCount) playerData.turnCount = 0;
+        
+        // 相容舊存檔 (遷移 currentStatus 至 statusHistory)
+        if (playerData.currentStatus && playerData.statusHistory.length === 0) {
+            playerData.statusHistory.push(playerData.currentStatus);
+        }
+
         isUnsaved = false;
         
         navigate('chat');
@@ -842,7 +858,6 @@
         statusSpan.innerText = "識別中...";
         const prompt = `請分析以下玩家的自我介紹，並以 JSON 格式提取資訊。如果未提及，請填入"未知"。性別只能是"男"、"女"或"其他"。\n自我介紹: "${text}"\n必須輸出的 JSON 格式: {"name":"...","gender":"...","age":"...","personality":"...","appearance":"...","status":"..."}\n請只輸出 JSON，不要有其他文字。`;
         try {
-            document.getElementById('chat-loading-bar').style.display = 'block';
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] }) });
             if (!response.ok) {
                 const errData = await response.json().catch(()=>({}));
@@ -862,8 +877,6 @@
             statusSpan.innerText = "✅ 識別完成";
         } catch (err) { 
             statusSpan.innerText = `❌ 識別失敗 (${err.message})，請手動填寫`; 
-        } finally {
-            document.getElementById('chat-loading-bar').style.display = 'none';
         }
     }
 
@@ -891,8 +904,8 @@
         playerData.dynamic_notes = playerData.dynamic_notes || [];
         playerData.npc_notes = playerData.npc_notes || [];
         playerData.memories = playerData.memories || [];
+        playerData.statusHistory = playerData.statusHistory || [];
         playerData.turnCount = playerData.turnCount || 0;
-        playerData.currentStatus = playerData.currentStatus || "";
 
         const backgroundLore = localStorage.getItem('custom_background_lore') || "";
         const systemPrompt = `你是「洛棠」，架空古代花樓「怡歡樓」的頭牌男子。
@@ -974,10 +987,12 @@
     function processReply(replyText) {
         let cleanText = replyText;
 
+        // 1. 抓取狀態卡並推入歷史 (歷史堆疊機制)
         const statusRegex = /∥\s*時間[：:][\s\S]*?∥\s*回應頁數[：:][^\n]*/i;
         const statusMatch = replyText.match(statusRegex);
         if (statusMatch) {
-            playerData.currentStatus = statusMatch[0];
+            playerData.statusHistory = playerData.statusHistory || [];
+            playerData.statusHistory.push(statusMatch[0]);
             cleanText = cleanText.replace(statusRegex, '');
         }
 
@@ -1075,21 +1090,33 @@
         }
         document.getElementById('player-card-content').innerHTML = phtml;
 
+        // 渲染歷史狀態卡
         let sHtml = ``;
-        if (playerData.currentStatus) {
-            const lines = playerData.currentStatus.split('∥');
-            lines.forEach(line => {
-                const text = line.trim();
-                if(text) {
-                    const parts = text.split(/：|:/);
-                    if(parts.length >= 2) {
-                        const title = parts[0].trim();
-                        const content = parts.slice(1).join('：').trim();
-                        sHtml += `<div class="npc-item" style="color:var(--highlight); border-left-color:var(--highlight); margin-bottom:10px;"><b>${title}</b>：${content}</div>`;
-                    } else {
-                        sHtml += `<div class="npc-item" style="color:var(--highlight); border-left-color:var(--highlight); margin-bottom:10px;">${text}</div>`;
-                    }
+        if (playerData.statusHistory && playerData.statusHistory.length > 0) {
+            // 反轉陣列，最新的一筆在最上面
+            playerData.statusHistory.slice().reverse().forEach((statusText, index) => {
+                const lines = statusText.split('∥');
+                sHtml += `<div class="history-status-card">`;
+                if (index === 0) {
+                    sHtml += `<div class="status-header-tag status-header-new">[ 最新狀態 ]</div>`;
+                } else {
+                    sHtml += `<div class="status-header-tag status-header-old">[ 歷史狀態 ]</div>`;
                 }
+                
+                lines.forEach(line => {
+                    const text = line.trim();
+                    if(text) {
+                        const parts = text.split(/：|:/);
+                        if(parts.length >= 2) {
+                            const title = parts[0].trim();
+                            const content = parts.slice(1).join('：').trim();
+                            sHtml += `<div class="npc-item" style="color:var(--highlight); border-left-color:var(--highlight); margin-bottom:8px; font-size:15px;"><b>${title}</b>：${content}</div>`;
+                        } else {
+                            sHtml += `<div class="npc-item" style="color:var(--highlight); border-left-color:var(--highlight); margin-bottom:8px; font-size:15px;">${text}</div>`;
+                        }
+                    }
+                });
+                sHtml += `</div>`;
             });
         } else {
             sHtml += `<div class="npc-item" style="color:var(--text-dark); border-color:var(--text-dark);">尚未生成狀態</div>`;
@@ -1137,7 +1164,7 @@
         memoryArea.innerHTML = html;
     }
 
-    // === 動態語境壓縮 ===
+    // === 動態語境壓縮 (包含狀態卡傳遞) ===
     async function generateSummary(isAuto = false) {
         const btn = document.getElementById('btn-generate-summary');
         if(!isAuto) { btn.disabled = true; btn.innerText = "🧠 正在回想記憶，請稍候..."; }
@@ -1189,10 +1216,15 @@
             const sysPrompt = conversationHistory[0];
             const recentMessages = conversationHistory.slice(-10);
             
+            // 抓取最後一次的狀態卡給 AI 記憶
+            const latestStatus = (playerData.statusHistory && playerData.statusHistory.length > 0) 
+                                 ? playerData.statusHistory[playerData.statusHistory.length - 1] 
+                                 : "";
+            
             conversationHistory = [
                 sysPrompt,
                 { role: "user", parts: [{ text: "【系統提示：以下是先前的劇情摘要，請接續這些設定與對話繼續扮演洛棠。你也必須確保每次回覆的最後繼續生成 ∥時間：... 的狀態卡。】\n" + summaryText.trim() }] },
-                { role: "model", parts: [{ text: "明白，我已將上述摘要融入記憶，將緊記我們的關係與事件，並接續當前狀態與最新的對話繼續演繹洛棠，並會在每次回覆的最後生成狀態卡。" + (playerData.currentStatus ? `\n\n當前狀態如下：\n${playerData.currentStatus}` : "") }] },
+                { role: "model", parts: [{ text: "明白，我已將上述摘要融入記憶，將緊記我們的關係與事件，並接續當前狀態與最新的對話繼續演繹洛棠，並會在每次回覆的最後生成狀態卡。" + (latestStatus ? `\n\n當前最新狀態如下：\n${latestStatus}` : "") }] },
                 ...recentMessages
             ];
 
