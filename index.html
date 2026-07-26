@@ -193,10 +193,19 @@
         .overlay-screen { display: none; width: 100vw; height: 100vh; overflow-y: auto; background: rgba(0,0,0,0.95); z-index: 50; flex-direction: column; padding: 40px 10vw; }
         .overlay-content { width: 100%; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; }
         
-        .save-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.6); border: 1px solid var(--border-color); padding: 25px; margin-bottom: 20px; border-radius: 6px; }
-        .save-info h3 { color: var(--highlight); font-size: 20px; margin-bottom: 8px; letter-spacing: 1px; }
-        .save-info span { color: var(--text-dark); font-size: 15px; }
-        .save-actions { display: flex; gap: 15px; }
+        /* ================= Modal (存檔/讀取/提示) ================= */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-box { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.8); overflow: hidden; }
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--border-color); color: var(--highlight); font-size: 1.3rem; font-weight: bold; display: flex; align-items: center; justify-content: space-between; }
+        .modal-body { padding: 20px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .modal-footer { padding: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
+        .modal-input { padding: 12px; background: rgba(0,0,0,0.7); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 5px; outline: none; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 1.1rem;}
+        .modal-input:focus { border-color: var(--primary-red); }
+        
+        #sl-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .sl-item { background: rgba(0,0,0,0.4); padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-main); transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .sl-item:hover { border-color: var(--primary-red); background: rgba(168, 46, 49, 0.2); }
+        .sl-item-name { font-weight: bold; font-size: 1.05rem; cursor: pointer; flex-grow: 1;}
 
         /* 角色卡建立區 */
         #char-creation-screen { display: none; width: 100vw; height: 100vh; overflow-y: auto; flex-direction: column; align-items: center; padding: 40px 10vw; }
@@ -220,8 +229,6 @@
         .btn-solid:hover { background: #d6383c; }
         .btn-green { background: #34702c; }
         .btn-green:hover { background: #45963a; }
-        .btn-delete { background: #8b2629; }
-        .btn-delete:hover { background: #b03034; }
 
         /* 系統主視窗 */
         #main-system-screen { display: none; flex-direction: column; flex: 1; height: 100vh; overflow: hidden; }
@@ -301,6 +308,20 @@
 </head>
 <body>
 
+<!-- ================= 存讀檔 Modal ================= -->
+<div id="sl-modal" class="modal-overlay">
+    <div class="modal-box" style="width: 500px; max-width: 90vw;">
+        <div class="modal-header" id="sl-title">檔案管理</div>
+        <div class="modal-body">
+            <div id="sl-list"></div>
+            <div id="sl-action-area"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-solid" style="background:#555; padding: 10px 20px; margin: 0;" onclick="closeModals()">取消 / 關閉</button>
+        </div>
+    </div>
+</div>
+
 <!-- 預載 SVG 彼岸花元件 -->
 <svg style="position:absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
     <defs>
@@ -374,8 +395,8 @@
                 </button>
             </div>
             <div class="menu-row-2">
-                <button class="menu-btn" id="btn-load" disabled onclick="doorTransition(() => navigate('save-manager'))">
-                    <div class="btn-content">舊相識<br><span style="font-size:15px; font-weight:normal;">(存檔閣)</span></div>
+                <button class="menu-btn" id="btn-load" disabled onclick="openModal('load')">
+                    <div class="btn-content">舊相識<br><span style="font-size:15px; font-weight:normal;">(讀取存檔)</span></div>
                 </button>
                 <button class="menu-btn" id="btn-import" disabled onclick="document.getElementById('import-save-file').click()">
                     <div class="btn-content">實體紀錄<br><span style="font-size:15px; font-weight:normal;">(匯入存檔)</span></div>
@@ -394,15 +415,6 @@
             <input type="password" id="admin-pwd" placeholder="輸入密碼" style="width: 100%; max-width: 450px; padding:20px; font-size:20px; background:rgba(0,0,0,0.7); border:2px solid var(--border-color); color:var(--text-main); margin-bottom: 30px; text-align:center; outline:none; border-radius:6px;">
             <button id="auth-action-btn" class="btn-solid" style="font-size: 20px; padding: 15px 50px;" onclick="verifyAdmin()">驗證</button>
             <p id="auth-msg" style="color: #ff6b81; margin-top: 25px; font-size: 18px; font-weight:bold;"></p>
-        </div>
-    </div>
-
-    <!-- 存檔閣 -->
-    <div id="save-manager-screen" class="overlay-screen">
-        <div class="overlay-content">
-            <button class="back-btn" onclick="doorTransition(() => navigate('lobby'))" style="align-self: flex-start;">返回大堂</button>
-            <h2 style="color:var(--highlight); margin-bottom: 40px; font-size: 32px; letter-spacing: 6px; text-align: center;">存檔閣</h2>
-            <div id="save-list" style="width: 100%;"></div>
         </div>
     </div>
 
@@ -470,10 +482,11 @@
     <!-- 系統主視窗 -->
     <div id="main-system-screen">
         <div class="system-header">
-            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">返回大堂</button>
+            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">退出大堂</button>
             <div class="system-header-actions">
-                <button class="btn-solid btn-green" style="padding: 12px 25px; margin:0; font-size:16px;" onclick="saveToBrowser()">定格瀏覽器切片</button>
-                <button class="btn-solid" style="padding: 12px 25px; margin:0; background: #555; font-size:16px;" onclick="exportSaveFile()">下載實體切片</button>
+                <button class="btn-solid btn-green" style="padding: 12px 25px; margin:0; font-size:16px;" onclick="openModal('save')">💾 存檔管理</button>
+                <button class="btn-solid" style="padding: 12px 25px; margin:0; background: #8b2629; font-size:16px;" onclick="openModal('load')">📂 讀取紀錄</button>
+                <button class="btn-solid" style="padding: 12px 25px; margin:0; background: #555; font-size:16px;" onclick="exportSaveFile()">⬇️ 下載實體存檔</button>
             </div>
         </div>
 
@@ -723,7 +736,6 @@
         document.getElementById('lobby-screen').style.display = 'none';
         document.getElementById('char-creation-screen').style.display = 'none';
         document.getElementById('main-system-screen').style.display = 'none';
-        document.getElementById('save-manager-screen').style.display = 'none';
         document.getElementById('maintenance-screen').style.display = 'none';
         
         if (screenId === 'lobby') {
@@ -732,9 +744,6 @@
         } else if (screenId === 'chat') {
             document.getElementById('main-system-screen').style.display = 'flex';
             switchTab('chat');
-        } else if (screenId === 'save-manager') {
-            document.getElementById('save-manager-screen').style.display = 'flex';
-            renderSaveManager();
         } else {
             document.getElementById(screenId + '-screen').style.display = 'flex';
         }
@@ -812,50 +821,94 @@
         document.getElementById('file-name-display').innerText = "尚未選擇檔案";
     }
 
-    // === ★ 時空切片(存檔) 管理系統 ★ ===
+    // === ★ 模態框(Modal) 存檔/讀取管理系統 ★ ===
     
-    function renderSaveManager() {
-        const saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
-        const list = document.getElementById('save-list');
-        list.innerHTML = '';
-        const keys = Object.keys(saves);
-        if(keys.length === 0) { list.innerHTML = '<p style="color:var(--text-dark); font-size:20px; text-align:center; padding: 40px;">尚無任何時空切片紀錄。</p>'; return; }
-        
-        keys.forEach(key => {
-            const div = document.createElement('div');
-            div.className = 'save-item';
-            div.innerHTML = `
-                <div class="save-info">
-                    <h3>${key}</h3>
-                    <span>${saves[key].time || '未知時間'}</span>
-                </div>
-                <div class="save-actions">
-                    <button class="btn-solid btn-green" onclick="doorTransition(() => loadSpecificSave('${key}'))">讀取</button>
-                    <button class="btn-solid btn-delete" onclick="deleteSpecificSave('${key}')">刪除</button>
-                </div>
-            `;
-            list.appendChild(div);
-        });
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(el => el.style.display = 'none');
     }
 
-    // 1. 瀏覽器存檔（建立獨立的新切片檔案，絕不覆蓋舊有存檔）
-    function saveToBrowser() {
-        const now = new Date();
-        // 產生精確到秒的時間戳後綴，保證預設名稱不重複
-        const timeStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}${now.getSeconds().toString().padStart(2,'0')}`;
-        const defaultName = `時空切片_第${playerData.turnCount || 0}幕_${timeStr}`;
+    function openModal(mode) {
+        const modal = document.getElementById('sl-modal');
+        const title = document.getElementById('sl-title');
+        const list = document.getElementById('sl-list');
+        const actionArea = document.getElementById('sl-action-area');
         
-        let name = prompt("請為此時空切片命名（每一次存檔皆會建立獨立新檔案）：", defaultName);
-        if (!name) return;
+        list.innerHTML = '';
+        actionArea.innerHTML = '';
+        modal.style.display = 'flex';
+        
+        const saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
+        const keys = Object.keys(saves);
+        
+        if (mode === 'save') {
+            title.innerText = '💾 建立或覆寫存檔';
+            
+            const now = new Date();
+            const timeStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}`;
+            const defaultName = `進度_第${playerData.turnCount || 0}幕_${timeStr}`;
+
+            actionArea.innerHTML = `
+                <input type="text" id="save-name-input" class="modal-input" placeholder="請輸入存檔名稱..." value="${defaultName}" />
+                <button class="btn-solid btn-green" style="width:100%; margin-top:15px; font-size: 18px;" onclick="executeSave()">確認存檔 / 覆寫</button>
+            `;
+            if(keys.length === 0) {
+                list.innerHTML = '<div style="color:var(--text-dark); text-align:center; padding:20px 0;">目前無任何存檔。</div>';
+            } else {
+                keys.forEach(name => {
+                    const div = document.createElement('div');
+                    div.className = 'sl-item';
+                    div.innerHTML = `<span class="sl-item-name" onclick="document.getElementById('save-name-input').value = '${name}';">${name}</span>
+                                     <div>
+                                         <span style="font-size:0.85rem; color:var(--highlight); cursor:pointer;" onclick="document.getElementById('save-name-input').value = '${name}';">(點擊帶入檔名)</span>
+                                         <span style="color:#ff6b81; cursor:pointer; margin-left:10px;" onclick="deleteSave('${name}', event)" title="刪除檔案">🗑️</span>
+                                     </div>`;
+                    list.appendChild(div);
+                });
+            }
+        } else if (mode === 'load') {
+            title.innerText = '📂 讀取本地存檔';
+            if(keys.length === 0) {
+                list.innerHTML = '<div style="color:var(--text-dark); text-align:center; padding:20px 0;">目前無任何存檔可讀取。</div>';
+            } else {
+                keys.forEach(name => {
+                    const div = document.createElement('div');
+                    div.className = 'sl-item';
+                    div.innerHTML = `<span class="sl-item-name" onclick="executeLoad('${name}')">${name}</span>
+                                     <div>
+                                        <span style="color:var(--highlight); cursor:pointer; margin-right:10px;" onclick="executeLoad('${name}')">讀取 ➔</span>
+                                        <span style="color:#ff6b81; cursor:pointer;" onclick="deleteSave('${name}', event)" title="刪除檔案">🗑️</span>
+                                     </div>`;
+                    list.appendChild(div);
+                });
+            }
+        }
+    }
+
+    function deleteSave(name, event) {
+        event.stopPropagation();
+        if(confirm(`確定要刪除存檔 [${name}] 嗎？此動作無法復原。`)) {
+            let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
+            delete saves[name];
+            localStorage.setItem('luotang_saves', JSON.stringify(saves));
+            openModal(document.getElementById('sl-title').innerText.includes('讀取') ? 'load' : 'save');
+            checkApiKey();
+        }
+    }
+
+    // 1. 執行存檔 (支援覆寫機制)
+    function executeSave() {
+        const nameInput = document.getElementById('save-name-input');
+        const name = nameInput ? nameInput.value.trim() : '';
+        if(!name) { alert("請輸入存檔名稱！"); return; }
         
         let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
         
-        // 若玩家堅持輸入舊檔名，強制加上隨機/時間後綴以建立「全新」檔案，防止覆蓋
+        // 如果檔名已存在，詢問是否覆寫
         if (saves[name]) {
-            name = `${name}_${new Date().getTime().toString().slice(-4)}`;
+            if(!confirm(`檔案 [${name}] 已存在，是否確定要覆寫？`)) return;
         }
-        
-        // 利用 JSON.parse(JSON.stringify) 深拷貝，完美定格當下記憶與狀態，切斷與後續劇情的連結
+
+        // 深拷貝定格當下狀態
         saves[name] = JSON.parse(JSON.stringify({ 
             history: conversationHistory, 
             uiLog: uiChatLog, 
@@ -865,80 +918,20 @@
         
         localStorage.setItem('luotang_saves', JSON.stringify(saves));
         isUnsaved = false;
-        alert(`【${name}】已完美定格。\n此時空切片已保存至存檔閣，您可以隨時無縫接軌此狀態。`);
+        closeModals();
+        alert(`【${name}】已成功儲存。`);
         checkApiKey();
     }
 
-    // 2. 下載實體存檔（導出獨立且純粹的深拷貝 JSON）
-    function exportSaveFile() {
-        const now = new Date();
-        const timeStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}${now.getSeconds().toString().padStart(2,'0')}`;
-        const defaultName = `洛棠_時空切片_第${playerData.turnCount || 0}幕_${timeStr}`;
-        
-        let filename = prompt("請為下載的實體時空切片命名：", defaultName);
-        if (filename === null) return; 
-        filename = filename.trim() || defaultName;
-        if (!filename.endsWith('.json')) filename += '.json';
-
-        // 徹底深拷貝定格狀態
-        const data = JSON.parse(JSON.stringify({ 
-            history: conversationHistory, 
-            uiLog: uiChatLog, 
-            player: playerData 
-        }));
-        
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-        URL.revokeObjectURL(url);
-        isUnsaved = false; 
-    }
-
-    // 3. 匯入存檔（載入舊切片時同樣防止覆蓋現有存檔）
-    function importSave(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if(data.history && data.player) {
-                    let name = prompt("請為匯入的時空切片命名：", file.name.replace('.json', ''));
-                    if(!name) name = file.name;
-                    
-                    let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
-                    
-                    // 防呆：如果匯入的檔名在瀏覽器裡已經有了，強制重新命名避免覆蓋
-                    if (saves[name]) {
-                        name = `${name}_匯入_${new Date().getTime().toString().slice(-4)}`;
-                    }
-
-                    saves[name] = { 
-                        history: data.history, 
-                        uiLog: data.uiLog || [...data.history], 
-                        player: data.player, 
-                        time: new Date().toLocaleString() + " (匯入切片)" 
-                    };
-                    
-                    localStorage.setItem('luotang_saves', JSON.stringify(saves));
-                    checkApiKey(); 
-                    alert(`時空切片【${name}】匯入成功！系統將為您打開存檔閣。`);
-                    doorTransition(() => navigate('save-manager'));
-                } else alert("存檔格式錯誤，無法還原該時空。");
-            } catch(err) { alert("讀取失敗，檔案可能損毀。"); }
-        };
-        reader.readAsText(file);
-        event.target.value = ''; 
-    }
-
-    function loadSpecificSave(key) {
+    // 2. 執行讀檔
+    function executeLoad(name) {
         const saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
-        if(!saves[key]) return;
+        if(!saves[name]) { alert("檔案不存在！"); return; }
         
         localStorage.setItem('luotang_api_key', apiKey);
         
-        // 【關鍵】：讀取存檔時也使用深拷貝，避免玩家在記憶庫裡把當下的操作污染到原始存檔
-        const loadedData = JSON.parse(JSON.stringify(saves[key]));
+        // 深拷貝讀出，避免污染原存檔
+        const loadedData = JSON.parse(JSON.stringify(saves[name]));
         
         conversationHistory = loadedData.history || [];
         uiChatLog = loadedData.uiLog || [...conversationHistory]; 
@@ -955,24 +948,86 @@
         if (!playerData.turnCount) playerData.turnCount = 0;
         
         isUnsaved = false;
+        closeModals();
         
-        navigate('chat');
-        renderChatHistory();
-        updatePlayerCardUI();
-        updateNpcCardUI();
-        renderMemories();
-        
-        document.getElementById('user-input').placeholder = "說點什麼... (Alt + Enter 傳送)";
+        const finishLoad = () => {
+            navigate('chat');
+            renderChatHistory();
+            updatePlayerCardUI();
+            updateNpcCardUI();
+            renderMemories();
+            document.getElementById('user-input').placeholder = "說點什麼... (Alt + Enter 傳送)";
+        };
+
+        // 如果在遊戲外讀檔，觸發大門動畫
+        if (document.getElementById('main-system-screen').style.display !== 'flex') {
+            doorTransition(() => finishLoad());
+        } else {
+            finishLoad();
+            alert(`已成功讀取存檔 [${name}]。`);
+        }
     }
 
-    function deleteSpecificSave(key) {
-        if(confirm(`確定要刪除時空切片 [${key}] 嗎？此動作無法復原。`)) {
-            let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
-            delete saves[key];
-            localStorage.setItem('luotang_saves', JSON.stringify(saves));
-            renderSaveManager();
-            checkApiKey();
-        }
+    // 3. 下載實體存檔 (保留)
+    function exportSaveFile() {
+        const now = new Date();
+        const timeStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}${now.getSeconds().toString().padStart(2,'0')}`;
+        const defaultName = `洛棠_進度_第${playerData.turnCount || 0}幕_${timeStr}`;
+        
+        let filename = prompt("請為下載的實體存檔命名：", defaultName);
+        if (filename === null) return; 
+        filename = filename.trim() || defaultName;
+        if (!filename.endsWith('.json')) filename += '.json';
+
+        const data = JSON.parse(JSON.stringify({ 
+            history: conversationHistory, 
+            uiLog: uiChatLog, 
+            player: playerData 
+        }));
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+        URL.revokeObjectURL(url);
+        isUnsaved = false; 
+    }
+
+    // 4. 匯入實體存檔 (若重複則詢問是否覆蓋)
+    function importSave(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if(data.history && data.player) {
+                    let name = prompt("請為匯入的存檔命名：", file.name.replace('.json', ''));
+                    if(!name) name = file.name;
+                    
+                    let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
+                    
+                    if (saves[name]) {
+                        if(!confirm(`檔案 [${name}] 已存在，是否覆寫？\n(若取消，將自動加上隨機後綴)`)){
+                            name = `${name}_匯入_${new Date().getTime().toString().slice(-4)}`;
+                        }
+                    }
+
+                    saves[name] = { 
+                        history: data.history, 
+                        uiLog: data.uiLog || [...data.history], 
+                        player: data.player, 
+                        time: new Date().toLocaleString() + " (匯入紀錄)" 
+                    };
+                    
+                    localStorage.setItem('luotang_saves', JSON.stringify(saves));
+                    checkApiKey(); 
+                    alert(`存檔【${name}】匯入成功！`);
+                    openModal('load');
+                } else alert("存檔格式錯誤，無法還原該進度。");
+            } catch(err) { alert("讀取失敗，檔案可能損毀。"); }
+        };
+        reader.readAsText(file);
+        event.target.value = ''; 
     }
 
     // === AI 角色卡識別 ===
@@ -1009,7 +1064,7 @@
     }
 
     function leaveChatRoom() {
-        if (isUnsaved && !confirm("警告：您有尚未定格的對話進度！\n確定要離開嗎？（未儲存的對話將會遺失）")) return;
+        if (isUnsaved && !confirm("警告：您有尚未儲存的進度！\n確定要離開嗎？（未儲存的對話將會遺失）")) return;
         doorTransition(() => navigate('lobby'));
     }
 
