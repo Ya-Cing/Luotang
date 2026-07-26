@@ -470,10 +470,10 @@
     <!-- 系統主視窗 -->
     <div id="main-system-screen">
         <div class="system-header">
-            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">退出大堂</button>
+            <button class="back-btn" style="margin:0;" onclick="leaveChatRoom()">返回大堂</button>
             <div class="system-header-actions">
-                <button class="btn-solid btn-green" style="padding: 12px 25px; margin:0; font-size:16px;" onclick="saveToBrowser()">瀏覽器存檔</button>
-                <button class="btn-solid" style="padding: 12px 25px; margin:0; background: #555; font-size:16px;" onclick="exportSaveFile()">下載實體存檔</button>
+                <button class="btn-solid btn-green" style="padding: 12px 25px; margin:0; font-size:16px;" onclick="saveToBrowser()">定格瀏覽器切片</button>
+                <button class="btn-solid" style="padding: 12px 25px; margin:0; background: #555; font-size:16px;" onclick="exportSaveFile()">下載實體切片</button>
             </div>
         </div>
 
@@ -655,7 +655,7 @@
 
     let apiKey = "";
     let conversationHistory = []; 
-    let uiChatLog = [];           
+    let uiChatLog = [];            
     let playerData = {};
     let lastUserMessage = "";
     let isUnsaved = false;
@@ -812,13 +812,14 @@
         document.getElementById('file-name-display').innerText = "尚未選擇檔案";
     }
 
-    // === 存檔管理系統 ===
+    // === ★ 時空切片(存檔) 管理系統 ★ ===
+    
     function renderSaveManager() {
         const saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
         const list = document.getElementById('save-list');
         list.innerHTML = '';
         const keys = Object.keys(saves);
-        if(keys.length === 0) { list.innerHTML = '<p style="color:var(--text-dark); font-size:20px; text-align:center; padding: 40px;">尚無存檔紀錄。</p>'; return; }
+        if(keys.length === 0) { list.innerHTML = '<p style="color:var(--text-dark); font-size:20px; text-align:center; padding: 40px;">尚無任何時空切片紀錄。</p>'; return; }
         
         keys.forEach(key => {
             const div = document.createElement('div');
@@ -837,11 +838,24 @@
         });
     }
 
+    // 1. 瀏覽器存檔（建立獨立的新切片檔案，絕不覆蓋舊有存檔）
     function saveToBrowser() {
-        let name = prompt("請為此瀏覽器存檔命名：", "進度_" + new Date().toLocaleString());
+        const now = new Date();
+        // 產生精確到秒的時間戳後綴，保證預設名稱不重複
+        const timeStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}${now.getSeconds().toString().padStart(2,'0')}`;
+        const defaultName = `時空切片_第${playerData.turnCount || 0}幕_${timeStr}`;
+        
+        let name = prompt("請為此時空切片命名（每一次存檔皆會建立獨立新檔案）：", defaultName);
         if (!name) return;
+        
         let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
         
+        // 若玩家堅持輸入舊檔名，強制加上隨機/時間後綴以建立「全新」檔案，防止覆蓋
+        if (saves[name]) {
+            name = `${name}_${new Date().getTime().toString().slice(-4)}`;
+        }
+        
+        // 利用 JSON.parse(JSON.stringify) 深拷貝，完美定格當下記憶與狀態，切斷與後續劇情的連結
         saves[name] = JSON.parse(JSON.stringify({ 
             history: conversationHistory, 
             uiLog: uiChatLog, 
@@ -851,8 +865,70 @@
         
         localStorage.setItem('luotang_saves', JSON.stringify(saves));
         isUnsaved = false;
-        alert(`存檔 [${name}] 已成功保存至存檔閣。`);
+        alert(`【${name}】已完美定格。\n此時空切片已保存至存檔閣，您可以隨時無縫接軌此狀態。`);
         checkApiKey();
+    }
+
+    // 2. 下載實體存檔（導出獨立且純粹的深拷貝 JSON）
+    function exportSaveFile() {
+        const now = new Date();
+        const timeStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}${now.getSeconds().toString().padStart(2,'0')}`;
+        const defaultName = `洛棠_時空切片_第${playerData.turnCount || 0}幕_${timeStr}`;
+        
+        let filename = prompt("請為下載的實體時空切片命名：", defaultName);
+        if (filename === null) return; 
+        filename = filename.trim() || defaultName;
+        if (!filename.endsWith('.json')) filename += '.json';
+
+        // 徹底深拷貝定格狀態
+        const data = JSON.parse(JSON.stringify({ 
+            history: conversationHistory, 
+            uiLog: uiChatLog, 
+            player: playerData 
+        }));
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+        URL.revokeObjectURL(url);
+        isUnsaved = false; 
+    }
+
+    // 3. 匯入存檔（載入舊切片時同樣防止覆蓋現有存檔）
+    function importSave(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if(data.history && data.player) {
+                    let name = prompt("請為匯入的時空切片命名：", file.name.replace('.json', ''));
+                    if(!name) name = file.name;
+                    
+                    let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
+                    
+                    // 防呆：如果匯入的檔名在瀏覽器裡已經有了，強制重新命名避免覆蓋
+                    if (saves[name]) {
+                        name = `${name}_匯入_${new Date().getTime().toString().slice(-4)}`;
+                    }
+
+                    saves[name] = { 
+                        history: data.history, 
+                        uiLog: data.uiLog || [...data.history], 
+                        player: data.player, 
+                        time: new Date().toLocaleString() + " (匯入切片)" 
+                    };
+                    
+                    localStorage.setItem('luotang_saves', JSON.stringify(saves));
+                    checkApiKey(); 
+                    alert(`時空切片【${name}】匯入成功！系統將為您打開存檔閣。`);
+                    doorTransition(() => navigate('save-manager'));
+                } else alert("存檔格式錯誤，無法還原該時空。");
+            } catch(err) { alert("讀取失敗，檔案可能損毀。"); }
+        };
+        reader.readAsText(file);
+        event.target.value = ''; 
     }
 
     function loadSpecificSave(key) {
@@ -861,6 +937,7 @@
         
         localStorage.setItem('luotang_api_key', apiKey);
         
+        // 【關鍵】：讀取存檔時也使用深拷貝，避免玩家在記憶庫裡把當下的操作污染到原始存檔
         const loadedData = JSON.parse(JSON.stringify(saves[key]));
         
         conversationHistory = loadedData.history || [];
@@ -889,51 +966,13 @@
     }
 
     function deleteSpecificSave(key) {
-        if(confirm(`確定要刪除存檔 [${key}] 嗎？此動作無法復原。`)) {
+        if(confirm(`確定要刪除時空切片 [${key}] 嗎？此動作無法復原。`)) {
             let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
             delete saves[key];
             localStorage.setItem('luotang_saves', JSON.stringify(saves));
             renderSaveManager();
             checkApiKey();
         }
-    }
-
-    function exportSaveFile() {
-        const defaultName = `洛棠存檔_${new Date().toISOString().slice(0,10).replace(/-/g, '')}`;
-        let filename = prompt("請為下載的存檔檔案命名：", defaultName);
-        if (filename === null) return; 
-        filename = filename.trim() || defaultName;
-        if (!filename.endsWith('.json')) filename += '.json';
-
-        const data = JSON.parse(JSON.stringify({ history: conversationHistory, uiLog: uiChatLog, player: playerData }));
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-        URL.revokeObjectURL(url);
-        isUnsaved = false; 
-    }
-
-    function importSave(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if(data.history && data.player) {
-                    let name = prompt("請為匯入的存檔命名：", file.name.replace('.json', ''));
-                    if(!name) name = file.name;
-                    let saves = JSON.parse(localStorage.getItem('luotang_saves') || '{}');
-                    saves[name] = { history: data.history, uiLog: data.uiLog || [...data.history], player: data.player, time: new Date().toLocaleString() + " (匯入)" };
-                    localStorage.setItem('luotang_saves', JSON.stringify(saves));
-                    checkApiKey(); 
-                    alert("存檔匯入成功！系統將為您打開存檔閣。");
-                    doorTransition(() => navigate('save-manager'));
-                } else alert("存檔格式錯誤");
-            } catch(err) { alert("讀取失敗，檔案可能損毀"); }
-        };
-        reader.readAsText(file);
-        event.target.value = ''; 
     }
 
     // === AI 角色卡識別 ===
@@ -970,7 +1009,7 @@
     }
 
     function leaveChatRoom() {
-        if (isUnsaved && !confirm("警告：您有尚未儲存的對話進度！\n確定要離開嗎？（未儲存的對話將會遺失）")) return;
+        if (isUnsaved && !confirm("警告：您有尚未定格的對話進度！\n確定要離開嗎？（未儲存的對話將會遺失）")) return;
         doorTransition(() => navigate('lobby'));
     }
 
